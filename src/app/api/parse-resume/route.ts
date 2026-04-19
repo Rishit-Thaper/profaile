@@ -2,11 +2,8 @@ export const runtime = "nodejs";
 import { GoogleGenAI } from "@google/genai";
 import mammoth from "mammoth";
 import { NextRequest, NextResponse } from "next/server";
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
+import { extractText as extractPdfText } from "unpdf";
 
-// This is required to make pdfjs work in a Node/Next.js server environment
-// It points to the worker script so the parsing can happen in the background
-import "pdfjs-dist/build/pdf.worker.mjs";
 import { v4 as uuidv4 } from "uuid";
 /* -------------------------------- CONFIG --------------------------------- */
 const ai = new GoogleGenAI({
@@ -163,43 +160,13 @@ function validateFile(file: File | null): asserts file is File {
 /* ---------------------------- AI PARSE LOGIC ----------------------------- */
 async function extractText(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
-  const uint8Array = new Uint8Array(arrayBuffer);
 
   if (file.type === "application/pdf") {
-    const loadingTask = pdfjs.getDocument({
-      data: uint8Array,
-      useSystemFonts: true,
-      disableFontFace: true,
-    });
-
-    const pdf = await loadingTask.promise;
-    let fullContent = "";
-
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-
-      // 1. Get Visible Text
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items.map((item: any) => item.str).join(" ");
-
-      // 2. Get Annotations (Hyperlinks)
-      const annotations = await page.getAnnotations();
-      const links = annotations
-        .filter((annot: any) => annot.subtype === "Link" && annot.url)
-        .map((annot: any) => annot.url);
-
-      // 3. Combine them
-      // We append the links at the end of the page text.
-      // Gemini is smart enough to associate the URLs with the context.
-      const linksText =
-        links.length > 0 ? `\n[Detected Hyperlinks: ${links.join(", ")}]` : "";
-
-      fullContent += pageText + linksText + "\n";
-    }
-
-    return fullContent;
+    const { text } = await extractPdfText(new Uint8Array(arrayBuffer));
+    const rawText = text.join("\n").trim();
+    if (!rawText) throw new Error("Unable to extract text from PDF.");
+    return rawText;
   }
-
   if (
     file.type ===
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document"

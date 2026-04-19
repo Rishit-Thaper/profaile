@@ -80,7 +80,7 @@ export default function UsernameInput({
   const baseUrl =
     typeof window !== "undefined"
       ? window.location.origin
-      : "https://profaile.dev";
+      : process.env.NEXT_PUBLIC_BASE_URL;
 
   return (
     <div className={styles.wrapper}>
