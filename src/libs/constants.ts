@@ -95,4 +95,11 @@ export const data: PortfolioData = {
       gpa: "8.5",
     },
   ],
+  stats: [
+    { val: "1+", label: "Years Exp." },
+    { val: "4+", label: "Projects" },
+    { val: "25%", label: "Perf. Gain" },
+    { val: "8.5", label: "CGPA" },
+  ],
+  core_stack: ["React.js", "Next.js", "Node.js", "MongoDB", "TypeScript"],
 };

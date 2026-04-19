@@ -30,7 +30,7 @@ export default function Skills({ data }: { data: SkillsType }) {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {cats.map((cat, i) => (
+          {cats.filter(cat => cat.items && cat.items.length > 0).map((cat, i) => (
             <div
               key={cat.label}
               className={`group transition-all duration-700 ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}

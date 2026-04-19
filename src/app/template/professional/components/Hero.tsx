@@ -1,6 +1,6 @@
 "use client";
 
-import { PersonalInfo } from "@/app/types";
+import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";
 import {
   IconArrow,
@@ -15,18 +15,20 @@ import {
   IconYoutube,
 } from "./Icons";
 
-export default function Hero({ data }: { data: PersonalInfo }) {
+export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; stats?: Stat[]; core_stack?: string[] }) {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => setLoaded(true), 100);
   }, []);
 
-  const stats = [
-    { val: "1+", label: "Years" },
-    { val: "4+", label: "Projects" },
-    { val: "25%", label: "Avg. Perf. Gain" },
-    { val: "8.5", label: "CGPA" },
-  ];
+  const displayStats = stats && stats.length > 0
+    ? stats
+    : [
+      { val: "1+", label: "Years" },
+      { val: "4+", label: "Projects" },
+      { val: "25%", label: "Avg. Perf. Gain" },
+      { val: "8.5", label: "CGPA" },
+    ];
 
   const socialLinks = [
     { key: "github", label: "GitHub" },
@@ -181,7 +183,7 @@ export default function Hero({ data }: { data: PersonalInfo }) {
               </div>
               {/* Stats */}
               <div className="grid grid-cols-2 gap-px bg-[#F5F0E8]/10">
-                {stats.map((s, i) => (
+                {displayStats.map((s, i) => (
                   <div
                     key={i}
                     className="bg-[#0D1F16] p-5 hover:bg-[#122A1C] transition-colors duration-200"
@@ -196,12 +198,12 @@ export default function Hero({ data }: { data: PersonalInfo }) {
                 ))}
               </div>
               {/* Core stack */}
-              <div className="mt-6">
+              {core_stack && core_stack.length > 0 && <div className="mt-6">
                 <p className="text-[#F5F0E8]/30 text-xs tracking-[0.3em] uppercase mb-3">
                   Core Stack
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {["React.js", "Next.js", "TypeScript", "Node.js"].map((t) => (
+                  {(core_stack && core_stack.length > 0 ? core_stack : ["React.js", "Next.js", "TypeScript", "Node.js"]).map((t) => (
                     <span
                       key={t}
                       className="text-xs px-3 py-1.5 bg-[#C4622D]/10 text-[#C4622D] border border-[#C4622D]/20 hover:bg-[#C4622D]/20 transition-colors cursor-default"
@@ -210,7 +212,7 @@ export default function Hero({ data }: { data: PersonalInfo }) {
                     </span>
                   ))}
                 </div>
-              </div>
+              </div>}
             </div>
           </div>
         </div>

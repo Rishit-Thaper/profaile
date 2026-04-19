@@ -1,0 +1,175 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  text-align: left;
+  font-family: var(--font-sans);
+  padding: 0;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.selected {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 24px rgba(124, 92, 252, 0.15) !important;
+}
+
+/* ─── Preview ─── */
+.preview {
+  position: relative;
+  height: 160px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.previewGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Mock elements */
+.mockNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mockNavDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.mockNavLines {
+  display: flex;
+  gap: 6px;
+}
+
+.mockNavLines span {
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.mockHero {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.mockTitle {
+  width: 70%;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.mockSubtitle {
+  width: 45%;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.mockParagraph {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.mockParagraph span {
+  height: 3px;
+  border-radius: 2px;
+}
+
+.mockParagraph span:first-child {
+  width: 90%;
+}
+
+.mockParagraph span:last-child {
+  width: 60%;
+}
+
+.mockCards {
+  display: flex;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.mockCard {
+  flex: 1;
+  height: 28px;
+  border-radius: 4px;
+}
+
+/* ─── Info ─── */
+.info {
+  padding: 16px;
+}
+
+.infoHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.selectedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  background: rgba(124, 92, 252, 0.1);
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+
+.description {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.colorDots {
+  display: flex;
+  gap: 6px;
+}
+
+.colorDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  transition: transform var(--duration-fast) var(--ease-spring);
+}
+
+.colorDot:hover {
+  transform: scale(1.3);
+}

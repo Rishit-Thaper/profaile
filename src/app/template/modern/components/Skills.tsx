@@ -19,8 +19,9 @@ export default function Skills({ data }: { data: SkillsType }) {
         />
 
         <div className="grid md:grid-cols-2 gap-6">
-          {(Object.entries(data) as [keyof SkillsType, string[]][]).map(
-            ([cat, items], catIdx) => {
+          {(Object.entries(data) as [keyof SkillsType, string[]][])
+            .filter(([_, items]) => items && items.length > 0)
+            .map(([cat, items], catIdx) => {
               const { color, bg } = SKILL_COLORS[catIdx % SKILL_COLORS.length];
               return (
                 <div

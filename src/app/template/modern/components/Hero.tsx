@@ -1,6 +1,6 @@
 "use client";
 
-import { PersonalInfo } from "@/app/types";
+import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";
 import { ACCENTS } from "./constants";
 import {
@@ -17,18 +17,26 @@ import {
   IconYoutube,
 } from "./Icons";
 
-export default function Hero({ data }: { data: PersonalInfo }) {
+export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; stats?: Stat[]; core_stack?: string[] }) {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => setLoaded(true), 80);
   }, []);
 
-  const stats = [
+  const defaultStats = [
     { val: "1+", label: "Years Exp.", color: "#FF6B6B", bg: "#FFF0F0" },
     { val: "4+", label: "Projects", color: "#5C6BC0", bg: "#F0F1FF" },
     { val: "25%", label: "Perf. Gain", color: "#FFB347", bg: "#FFF8EE" },
     { val: "8.5", label: "CGPA", color: "#26C6B0", bg: "#EDFCFA" },
   ];
+  console.log("stats", stats)
+  const displayStats = stats && stats.length > 0
+    ? stats.map((s, i) => ({
+      ...s,
+      color: defaultStats[i % defaultStats.length].color,
+      bg: defaultStats[i % defaultStats.length].bg
+    }))
+    : defaultStats;
 
   const socialLinks = [
     {
@@ -207,7 +215,7 @@ export default function Hero({ data }: { data: PersonalInfo }) {
           <div
             className={`grid grid-cols-2 gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
           >
-            {stats.map((s, i) => (
+            {displayStats.map((s, i) => (
               <div
                 key={i}
                 className="rounded-3xl p-6 flex flex-col gap-2 hover:scale-105 transition-transform duration-300"
@@ -225,18 +233,18 @@ export default function Hero({ data }: { data: PersonalInfo }) {
               </div>
             ))}
             {/* Core stack card spanning full width */}
-            <div className="col-span-2 rounded-3xl p-6 bg-[#1A1A2E]">
+            {core_stack && core_stack.length > 0 && <div className="col-span-2 rounded-3xl p-6 bg-[#1A1A2E]">
               <p className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-3">
                 Core Stack
               </p>
               <div className="flex flex-wrap gap-2">
-                {[
+                {(core_stack && core_stack.length > 0 ? core_stack : [
                   "React.js",
                   "Next.js",
                   "TypeScript",
                   "Node.js",
                   "MongoDB",
-                ].map((t, i) => (
+                ]).map((t, i) => (
                   <span
                     key={t}
                     className="px-3 py-1.5 rounded-full text-xs font-semibold text-white/80"
@@ -249,7 +257,7 @@ export default function Hero({ data }: { data: PersonalInfo }) {
                   </span>
                 ))}
               </div>
-            </div>
+            </div>}
           </div>
         </div>
       </div>

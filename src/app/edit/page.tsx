@@ -1,8 +1,8 @@
 import { createClient } from "@/libs/supabase/server";
 import { redirect } from "next/navigation";
-import DashboardClient from "./DashboardClient";
+import EditClient from "./EditClient";
 
-export default async function Home() {
+export default async function EditPage() {
   const supabase = await createClient();
 
   const {
@@ -13,5 +13,5 @@ export default async function Home() {
     redirect("/login");
   }
 
-  return <DashboardClient userEmail={session.user.email ?? ""} />;
+  return <EditClient userEmail={session.user.email ?? ""} />;
 }

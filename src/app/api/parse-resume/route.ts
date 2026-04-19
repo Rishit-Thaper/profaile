@@ -13,7 +13,7 @@ const ai = new GoogleGenAI({
   apiKey: process.env.NEXT_GEMINI_API_KEY!,
 });
 
-const MODEL = "gemini-1.5-flash";
+const MODEL = "gemini-2.5-flash";
 
 /* ----------------------------- SYSTEM PROMPT ----------------------------- */
 
@@ -23,7 +23,10 @@ Rules:
 - Return ONLY valid JSON.
 - Do NOT include markdown or code blocks.
 - Do NOT include explanations.
-- If any field is missing, return empty string or empty array.`;
+- If any field is missing, return empty string or empty array.
+- For the 'gpa' field, extract ONLY the numeric value (e.g., '8.5' or '3.8', NOT '8.5/10 Aggregate CGPA').
+- Analyze the resume and generate a \`stats\` array containing 4 impressive metrics (e.g., Years of Experience, Number of Projects, Performance Gain, CGPA).
+- Analyze the resume and generate a \`core_stack\` array containing 3-5 impressive technical skills(e.g., React, Node.js, Python, SQL, Figma, etc.)`;
 
 /* --------------------------- RESPONSE SCHEMA ----------------------------- */
 
@@ -115,8 +118,23 @@ const RESPONSE_SCHEMA = {
         },
       },
     },
+    stats: {
+      type: "ARRAY",
+      items: {
+        type: "OBJECT",
+        properties: {
+          val: { type: "STRING" },
+          label: { type: "STRING" },
+        },
+        required: ["val", "label"],
+      },
+    },
+    core_stack: {
+      type: "ARRAY",
+      items: { type: "STRING" },
+    },
   },
-  required: ["personal_info", "skills", "experience", "projects", "education"],
+  required: ["personal_info", "skills", "experience", "projects", "education", "stats", "core_stack"],
 };
 
 /* ----------------------------- SUPPORTED TYPES --------------------------- */
@@ -215,13 +233,13 @@ async function parseResumeWithAI(
       systemInstruction: SYSTEM_PROMPT,
       responseSchema: RESPONSE_SCHEMA,
       responseMimeType: "application/json",
-      maxOutputTokens: 2048,
+      maxOutputTokens: 8192,
       temperature: 0.1,
     },
   });
 
   const text = response.text;
-
+  console.log("text", text)
   if (!text) {
     throw new Error("AI model returned an empty response.");
   }
@@ -231,6 +249,9 @@ async function parseResumeWithAI(
     .replace(/^```json\n?/, "")
     .replace(/\n?```$/, "")
     .trim();
+
+  console.log("cleaned", cleaned)
+  console.log("JSON.parse(cleaned)", JSON.parse(cleaned));
 
   return JSON.parse(cleaned);
 }
@@ -245,7 +266,7 @@ export async function POST(req: NextRequest) {
     validateFile(file);
 
     const resumeText = await extractText(file);
-
+    console.log("resuyme", resumeText)
     if (!resumeText || resumeText.trim().length < 50) {
       throw new Error("Unable to extract meaningful text from resume.");
     }
@@ -262,12 +283,13 @@ export async function POST(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
+    console.log("error", error)
     const message =
       error instanceof Error ? error.message : "An unexpected error occurred.";
     const status =
       message.includes("No resume") ||
-      message.includes("Unsupported") ||
-      message.includes("empty")
+        message.includes("Unsupported") ||
+        message.includes("empty")
         ? 400
         : 500;
 

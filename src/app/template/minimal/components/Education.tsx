@@ -17,14 +17,11 @@ export default function Education({ data }: { data: EducationType[] }) {
           <p className="font-mono text-xs text-[#7FA688] tracking-[0.15em] uppercase mb-10">
             {edu.degree} · {edu.field}
           </p>
-          <div className="flex items-baseline gap-3">
+          {edu.gpa && <div className="flex items-baseline gap-3">
             <span className="font-serif text-6xl text-[#E8E4DC]">
               {edu.gpa}
             </span>
-            <span className="font-serif italic text-[#E8E4DC]/25 text-xl">
-              / 10 Aggregate CGPA
-            </span>
-          </div>
+          </div>}
         </div>
       ))}
     </Section>

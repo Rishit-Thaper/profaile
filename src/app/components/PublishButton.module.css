@@ -1,0 +1,218 @@
+.wrapper {
+  max-width: 520px;
+}
+
+.statusCard {
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  border: 1.5px solid var(--border-subtle);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.live {
+  background: linear-gradient(
+    135deg,
+    rgba(52, 211, 153, 0.04) 0%,
+    rgba(52, 211, 153, 0.01) 100%
+  );
+  border-color: rgba(52, 211, 153, 0.2);
+}
+
+.draft {
+  background: var(--bg-card);
+}
+
+.statusHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.statusDot {
+  padding-top: 4px;
+}
+
+.dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dotLive {
+  background: var(--success);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.5);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.dotDraft {
+  background: var(--text-muted);
+}
+
+.statusInfo {
+  flex: 1;
+}
+
+.statusTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.statusSub {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ─── URL Bar ─── */
+.urlBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+}
+
+.urlText {
+  flex: 1;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copyButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: color var(--duration-fast) ease;
+  display: flex;
+  align-items: center;
+}
+
+.copyButton:hover {
+  color: var(--text-primary);
+}
+
+/* ─── Theme Badge ─── */
+.themeBadge {
+  display: inline-flex;
+  padding: 4px 12px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+
+.themeBadge strong {
+  color: var(--text-secondary);
+  margin-left: 4px;
+}
+
+/* ─── Actions ─── */
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.publishButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 32px;
+  background: var(--accent-gradient);
+  background-size: 200% auto;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  min-width: 160px;
+  height: 44px;
+}
+
+.publishButton:hover:not(:disabled) {
+  background-position: right center;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px rgba(124, 92, 252, 0.3);
+}
+
+.publishButton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.unpublishButton {
+  background: var(--bg-elevated) !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border-default);
+}
+
+.unpublishButton:hover:not(:disabled) {
+  background: var(--error-bg) !important;
+  color: var(--error) !important;
+  border-color: var(--error) !important;
+  box-shadow: none !important;
+}
+
+.viewButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.viewButton:hover {
+  background: rgba(52, 211, 153, 0.15);
+  transform: translateY(-1px);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin-slow 0.6s linear infinite;
+}
+
+@media (max-width: 640px) {
+  .statusCard {
+    padding: 20px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .publishButton,
+  .viewButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

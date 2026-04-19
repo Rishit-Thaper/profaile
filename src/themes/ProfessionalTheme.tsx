@@ -1,17 +1,16 @@
 "use client";
 
-import { data } from "@/libs/constants";
-import CustomCursor from "./components/CustomCursor";
-import Education from "./components/Education";
-import Experience from "./components/Experience";
-import Footer from "./components/Footer";
-import Hero from "./components/Hero";
-import Navbar from "./components/Navbar";
-import Projects from "./components/Projects";
-import Skills from "./components/Skills";
+import { PortfolioData } from "@/app/types";
+import CustomCursor from "@/app/template/professional/components/CustomCursor";
+import Education from "@/app/template/professional/components/Education";
+import Experience from "@/app/template/professional/components/Experience";
+import Footer from "@/app/template/professional/components/Footer";
+import Hero from "@/app/template/professional/components/Hero";
+import Navbar from "@/app/template/professional/components/Navbar";
+import Projects from "@/app/template/professional/components/Projects";
+import Skills from "@/app/template/professional/components/Skills";
 
-// ─── ROOT ─────────────────────────────────────────────────────────────────────
-export default function ProfessionalPortfolio() {
+export default function ProfessionalTheme({ data }: { data: PortfolioData }) {
   return (
     <>
       <style>{`
@@ -29,9 +28,9 @@ export default function ProfessionalPortfolio() {
       <Navbar data={data.personal_info} />
       <Hero data={data.personal_info} stats={data.stats} core_stack={data.core_stack} />
       <Experience data={data.experience} />
-      <Education data={data.education} />
       <Projects data={data.projects} />
       <Skills data={data.skills} />
+      <Education data={data.education} />
       <Footer data={data.personal_info} />
     </>
   );

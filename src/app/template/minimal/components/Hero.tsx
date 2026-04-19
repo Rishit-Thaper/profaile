@@ -1,8 +1,8 @@
 import ArrowUpRight from "@/app/components/ArrowUpright";
-import { PersonalInfo } from "@/app/types";
+import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";
 
-export default function Hero({ data }: { data: PersonalInfo }) {
+export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; stats?: Stat[]; core_stack?: string[] }) {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => setLoaded(true), 80);

@@ -1,0 +1,124 @@
+.wrapper {
+  max-width: 520px;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--duration-normal) var(--ease-out);
+}
+
+.inputGroup:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 20px rgba(124, 92, 252, 0.1);
+}
+
+.prefix {
+  padding: 12px 2px 12px 16px;
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 12px 4px;
+  min-width: 0;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.statusIcon {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+}
+
+.checkingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin-slow 0.6s linear infinite;
+}
+
+.error {
+  font-size: 0.8rem;
+  color: var(--error);
+  margin-top: 8px;
+}
+
+.availableText {
+  font-size: 0.8rem;
+  color: var(--success);
+  margin-top: 8px;
+}
+
+.claimButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 12px 32px;
+  background: var(--accent-gradient);
+  background-size: 200% auto;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  min-width: 160px;
+  height: 44px;
+}
+
+.claimButton:hover:not(:disabled) {
+  background-position: right center;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px rgba(124, 92, 252, 0.3);
+}
+
+.claimButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.savingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin-slow 0.6s linear infinite;
+}
+
+@media (max-width: 640px) {
+  .prefix {
+    font-size: 0.75rem;
+    padding-left: 12px;
+  }
+
+  .input {
+    font-size: 0.8rem;
+  }
+}

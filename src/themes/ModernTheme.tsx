@@ -1,16 +1,15 @@
 "use client";
 
-import { data } from "@/libs/constants";
-import Education from "./components/Education";
-import Experience from "./components/Experience";
-import Footer from "./components/Footer";
-import Hero from "./components/Hero";
-import Navbar from "./components/Navbar";
-import Projects from "./components/Projects";
-import Skills from "./components/Skills";
+import { PortfolioData } from "@/app/types";
+import Education from "@/app/template/modern/components/Education";
+import Experience from "@/app/template/modern/components/Experience";
+import Footer from "@/app/template/modern/components/Footer";
+import Hero from "@/app/template/modern/components/Hero";
+import Navbar from "@/app/template/modern/components/Navbar";
+import Projects from "@/app/template/modern/components/Projects";
+import Skills from "@/app/template/modern/components/Skills";
 
-// ─── ROOT ─────────────────────────────────────────────────────────────────────
-export default function ModernPortfolio() {
+export default function ModernTheme({ data }: { data: PortfolioData }) {
   return (
     <>
       <style>{`
@@ -40,9 +39,9 @@ export default function ModernPortfolio() {
       <Navbar data={data} />
       <Hero data={data.personal_info} stats={data.stats} core_stack={data.core_stack} />
       <Experience data={data.experience} />
-      <Education data={data.education} />
       <Projects data={data.projects} />
       <Skills data={data.skills} />
+      <Education data={data.education} />
       <Footer data={data.personal_info} />
     </>
   );

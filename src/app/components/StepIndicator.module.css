@@ -1,0 +1,114 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  position: relative;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 8px 0;
+  cursor: pointer;
+  position: relative;
+  font-family: var(--font-sans);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.step:disabled {
+  cursor: default;
+}
+
+.dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border-default);
+  background: var(--bg-secondary);
+  color: var(--text-tertiary);
+  transition: all var(--duration-normal) var(--ease-out);
+  flex-shrink: 0;
+}
+
+.dotInner {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  transition: color var(--duration-normal) var(--ease-out);
+}
+
+.connector {
+  width: 32px;
+  height: 2px;
+  background: var(--border-subtle);
+  margin: 0 8px;
+  flex-shrink: 0;
+  transition: background var(--duration-normal) var(--ease-out);
+}
+
+/* ─── Active ─── */
+.active .dot {
+  border-color: var(--accent-primary);
+  background: rgba(124, 92, 252, 0.15);
+  box-shadow: 0 0 16px rgba(124, 92, 252, 0.2);
+}
+
+.active .dotInner {
+  background: var(--accent-primary);
+  width: 6px;
+  height: 6px;
+}
+
+.active .label {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ─── Completed ─── */
+.completed .dot {
+  border-color: var(--success);
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.completed .label {
+  color: var(--text-secondary);
+}
+
+.completed .connector {
+  background: var(--success);
+  opacity: 0.4;
+}
+
+/* ─── Future ─── */
+.future .label {
+  color: var(--text-muted);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .label {
+    display: none;
+  }
+
+  .connector {
+    width: 20px;
+    margin: 0 4px;
+  }
+}

@@ -1,16 +1,15 @@
 "use client";
 
-import { data } from "@/libs/constants";
-import Education from "./components/Education";
-import Experience from "./components/Experience";
-import Footer from "./components/Footer";
-import Hero from "./components/Hero";
-import Navbar from "./components/Navbar";
-import Projects from "./components/Project";
-import Skills from "./components/Skills";
+import { PortfolioData } from "@/app/types";
+import Education from "@/app/template/minimal/components/Education";
+import Experience from "@/app/template/minimal/components/Experience";
+import Footer from "@/app/template/minimal/components/Footer";
+import Hero from "@/app/template/minimal/components/Hero";
+import Navbar from "@/app/template/minimal/components/Navbar";
+import Projects from "@/app/template/minimal/components/Project";
+import Skills from "@/app/template/minimal/components/Skills";
 
-// ─── ROOT ─────────────────────────────────────────────────────────────────────
-export default function MinimalDarkPortfolio() {
+export default function MinimalTheme({ data }: { data: PortfolioData }) {
   return (
     <>
       <style>{`
@@ -26,7 +25,7 @@ export default function MinimalDarkPortfolio() {
         ::-webkit-scrollbar-thumb { background: #7FA688; }
       `}</style>
       <Navbar data={data} />
-      <Hero data={data.personal_info} stats={data.stats} core_stack={data.core_stack} />
+      <Hero data={data.personal_info} />
       <Experience data={data.experience} />
       <Education data={data.education} />
       <Projects data={data.projects} />

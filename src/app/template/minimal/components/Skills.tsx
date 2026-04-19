@@ -12,7 +12,7 @@ export default function Skills({ data }: { data: SkillsType }) {
   return (
     <Section id="skills" label="Skills">
       <div className="space-y-10">
-        {cats.map((cat) => (
+        {cats.filter(cat => cat.items && cat.items.length > 0).map((cat) => (
           <div key={cat.label} className="flex flex-col sm:flex-row sm:gap-16">
             <p className="font-mono text-[10px] text-[#E8E4DC]/20 tracking-[0.25em] uppercase w-28 flex-shrink-0 mt-0.5 mb-3 sm:mb-0">
               {cat.label}

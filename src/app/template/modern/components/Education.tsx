@@ -39,17 +39,14 @@ export default function Education({ data }: { data: EducationType[] }) {
               {edu.duration}
             </span>
           </div>
-          <div className="flex flex-col items-center gap-1">
+          {edu.gpa && <div className="flex flex-col items-center gap-1">
             <span
               className="font-display text-6xl font-bold"
               style={{ color: "#26C6B0" }}
             >
               {edu.gpa}
             </span>
-            <span className="text-[#1A1A2E]/35 text-sm font-medium">
-              / 10 CGPA
-            </span>
-          </div>
+          </div>}
         </div>
       </div>
     </section>

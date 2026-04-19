@@ -54,15 +54,11 @@ export default function Education({ data }: { data: EducationType[] }) {
                 </span>
               </div>
             </div>
-            <div className="bg-[#C4622D] p-10 flex flex-col justify-center items-center text-center">
-              <p className="text-[#F5F0E8]/70 text-xs tracking-[0.3em] uppercase mb-4">
-                CGPA
-              </p>
+            {edu.gpa && <div className="bg-[#C4622D] p-10 flex flex-col justify-center items-center text-center">
               <p className="font-display text-8xl text-[#F5F0E8] font-bold leading-none">
                 {edu.gpa}
               </p>
-              <p className="text-[#F5F0E8]/60 text-sm mt-2">out of 10</p>
-            </div>
+            </div>}
           </div>
         </div>
       </div>

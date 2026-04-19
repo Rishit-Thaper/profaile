@@ -55,6 +55,12 @@ export interface Education {
   duration: string;
   gpa?: string;
 }
+
+export interface Stat {
+  val: string;
+  label: string;
+}
+
 export interface PortfolioData {
   personal_info: PersonalInfo;
 
@@ -65,4 +71,8 @@ export interface PortfolioData {
   projects: Projects[];
 
   education: Education[];
+
+  stats?: Stat[];
+
+  core_stack?: string[];
 }
