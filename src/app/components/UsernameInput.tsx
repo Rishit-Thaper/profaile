@@ -65,6 +65,10 @@ export default function UsernameInput({
   }, [value, currentUsername, checkAvailability]);
 
   const handleSubmit = async () => {
+    if (!value) {
+      setError("Username is required");
+      return;
+    }
     if (status !== "available" && value !== currentUsername) return;
 
     setSaving(true);

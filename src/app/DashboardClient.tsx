@@ -98,6 +98,9 @@ export default function DashboardClient({
   }
 
   async function handleUsernameSet(username: string) {
+    if (!username) {
+      return;
+    }
     await updateProfile({ username } as Partial<Profile>);
     setCurrentStep("publish");
   }
