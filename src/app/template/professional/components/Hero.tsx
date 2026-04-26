@@ -113,20 +113,20 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
                   {data.title}
                 </span>
                 <span
-                  className="block text-[8rem] md:text-[10rem] text-[#F5F0E8] font-bold"
+                  className="block text-[4rem] sm:text-7xl md:text-[8rem] lg:text-[10rem] text-[#F5F0E8] font-bold break-words leading-none"
                   style={{ letterSpacing: "-0.03em" }}
                 >
                   {data.name.split(" ")[0]}
                 </span>
                 <span
-                  className="block text-[8rem] md:text-[10rem] font-bold"
+                  className="block text-[4rem] sm:text-7xl md:text-[8rem] lg:text-[10rem] font-bold break-words leading-none mt-2 md:mt-4"
                   style={{
                     letterSpacing: "-0.03em",
                     WebkitTextStroke: "1px rgba(245,240,232,0.25)",
                     color: "transparent",
                   }}
                 >
-                  {data.name.split(" ")[1]}
+                  {data.name.split(" ").slice(1).join(" ")}
                 </span>
               </h1>
               <div className="flex flex-wrap items-center gap-4 mt-8">

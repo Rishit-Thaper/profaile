@@ -110,11 +110,11 @@ export default function EditClient({ userEmail }: { userEmail: string }) {
       />
       <main className={styles.main}>
         <div className={styles.header}>
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div className={styles.headerTop}>
             <button onClick={() => router.push("/")} className={dashboardStyles.secondaryButton} style={{ padding: "8px 16px" }}>
               ← Back
             </button>
-            <h1 className={styles.title} style={{ margin: 0 }}>Edit Profile</h1>
+            <h1 className={styles.title}>Edit Profile</h1>
           </div>
           <button className={styles.saveButton} onClick={handleSave} disabled={saving}>
             {saving ? "Saving..." : "Save Changes"}

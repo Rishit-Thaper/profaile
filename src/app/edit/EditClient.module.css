@@ -23,6 +23,13 @@
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .tabs {
@@ -31,6 +38,12 @@
   margin-bottom: 2rem;
   border-bottom: 1px solid var(--border-default);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+.tabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .tab {
@@ -197,4 +210,46 @@
 @keyframes toastFadeIn {
   from { opacity: 0; transform: translate(-50%, 20px); }
   to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+  
+  .headerTop {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .saveButton {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .tabs {
+    gap: 0.5rem;
+    padding-bottom: 4px;
+  }
+
+  .tab {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .main {
+    padding: 24px 16px 64px;
+  }
+  
+  .arrayItem {
+    padding: 1rem;
+  }
 }
