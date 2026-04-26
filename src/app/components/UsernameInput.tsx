@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useCheckUsernameQuery } from "@/hooks/useProfile";
 import styles from "./UsernameInput.module.css";
 
 export default function UsernameInput({
@@ -11,32 +12,58 @@ export default function UsernameInput({
   onSet: (username: string) => void;
 }) {
   const [value, setValue] = useState(currentUsername);
+  const [debouncedValue, setDebouncedValue] = useState(currentUsername);
   const [status, setStatus] = useState<
     "idle" | "checking" | "available" | "taken" | "invalid"
   >("idle");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const checkAvailability = useCallback(async (username: string) => {
-    if (username.length < 3) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [value]);
+
+  const isValid = debouncedValue.length >= 3 && /^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(debouncedValue);
+
+  const { data, isFetching, isError } = useCheckUsernameQuery(
+    debouncedValue,
+    debouncedValue !== currentUsername && isValid
+  );
+
+  useEffect(() => {
+    if (!debouncedValue || debouncedValue === currentUsername) {
+      setStatus("idle");
+      setError("");
+      return;
+    }
+
+    if (debouncedValue.length < 3) {
       setStatus("invalid");
       setError("At least 3 characters");
       return;
     }
 
-    if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(username) && username.length > 2) {
+    if (!isValid && debouncedValue.length > 2) {
       setStatus("invalid");
       setError("Lowercase letters, numbers, and hyphens only");
       return;
     }
 
-    setStatus("checking");
-    try {
-      const res = await fetch(
-        `/api/profile/check-username?username=${encodeURIComponent(username)}`,
-      );
-      const data = await res.json();
+    if (isFetching) {
+      setStatus("checking");
+      return;
+    }
 
+    if (isError) {
+      setStatus("invalid");
+      setError("Failed to check availability");
+      return;
+    }
+
+    if (data) {
       if (data.available) {
         setStatus("available");
         setError("");
@@ -44,25 +71,8 @@ export default function UsernameInput({
         setStatus("taken");
         setError(data.error || "Username is already taken");
       }
-    } catch {
-      setStatus("invalid");
-      setError("Failed to check availability");
     }
-  }, []);
-
-  useEffect(() => {
-    if (!value || value === currentUsername) {
-      setStatus("idle");
-      setError("");
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      checkAvailability(value);
-    }, 400);
-
-    return () => clearTimeout(timer);
-  }, [value, currentUsername, checkAvailability]);
+  }, [debouncedValue, currentUsername, isValid, isFetching, isError, data]);
 
   const handleSubmit = async () => {
     if (!value) {

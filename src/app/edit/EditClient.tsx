@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardHeader from "../components/DashboardHeader";
 import { PortfolioData } from "../types";
+import { useProfileQuery, useUpdateProfileMutation } from "@/hooks/useProfile";
 import styles from "./EditClient.module.css";
 import dashboardStyles from "../dashboard.module.css";
 import "../dashboard-theme.css";
@@ -13,9 +14,9 @@ const TABS = ["Personal", "Skills", "Experience", "Projects", "Education", "Othe
 export default function EditClient({ userEmail }: { userEmail: string }) {
   const router = useRouter();
   const [data, setData] = useState<PortfolioData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: profileMeta, isLoading: loading } = useProfileQuery();
+  const updateProfileMutation = useUpdateProfileMutation();
   const [saving, setSaving] = useState(false);
-  const [profileMeta, setProfileMeta] = useState<any>(null);
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
@@ -25,17 +26,10 @@ export default function EditClient({ userEmail }: { userEmail: string }) {
   };
 
   useEffect(() => {
-    fetch("/api/profile")
-      .then((res) => res.json())
-      .then((resData) => {
-        setProfileMeta(resData);
-        if (resData.portfolio_data) {
-          setData(resData.portfolio_data);
-        }
-        setLoading(false);
-      })
-      .catch(console.error);
-  }, []);
+    if (profileMeta?.portfolio_data && !data) {
+      setData(profileMeta.portfolio_data);
+    }
+  }, [profileMeta, data]);
 
   const handleSave = async () => {
     if (!data) return;
@@ -69,13 +63,8 @@ export default function EditClient({ userEmail }: { userEmail: string }) {
     setData(cleanData);
 
     try {
-      const res = await fetch("/api/profile", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ portfolio_data: cleanData }),
-      });
-      if (!res.ok) showToast("Failed to save.", "error");
-      else showToast("Profile updated successfully!", "success");
+      await updateProfileMutation.mutateAsync({ portfolio_data: cleanData });
+      showToast("Profile updated successfully!", "success");
     } catch (e) {
       showToast("Error saving profile", "error");
     } finally {

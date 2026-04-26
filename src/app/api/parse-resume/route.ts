@@ -17,6 +17,9 @@ const MODEL = "gemini-2.5-flash";
 const SYSTEM_PROMPT = `You are a Resume Parsing AI.
 Your task is to extract structured resume data strictly matching the provided schema.
 Rules:
+- First, analyze the text to determine if it is actually a resume, CV, or professional profile.
+- Set 'is_resume' to true if the text is a resume, otherwise set it to false.
+- If it is NOT a resume, provide empty or placeholder data for the other required fields, but ensure 'is_resume' is false.
 - Return ONLY valid JSON.
 - Do NOT include markdown or code blocks.
 - Do NOT include explanations.
@@ -30,6 +33,10 @@ Rules:
 const RESPONSE_SCHEMA = {
   type: "OBJECT",
   properties: {
+    is_resume: {
+      type: "BOOLEAN",
+      description: "True if the text is a resume or CV, false otherwise."
+    },
     personal_info: {
       type: "OBJECT",
       properties: {
@@ -131,7 +138,7 @@ const RESPONSE_SCHEMA = {
       items: { type: "STRING" },
     },
   },
-  required: ["personal_info", "skills", "experience", "projects", "education", "stats", "core_stack"],
+  required: ["is_resume", "personal_info", "skills", "experience", "projects", "education", "stats", "core_stack"],
 };
 
 /* ----------------------------- SUPPORTED TYPES --------------------------- */
@@ -233,14 +240,16 @@ export async function POST(req: NextRequest) {
     validateFile(file);
 
     const resumeText = await extractText(file);
-    console.log("resuyme", resumeText)
     if (!resumeText || resumeText.trim().length < 50) {
       throw new Error("Unable to extract meaningful text from resume.");
     }
 
     const parsedResume = await parseResumeWithAI(resumeText);
 
-    console.log("Parsed Resume:", parsedResume);
+    if (parsedResume.is_resume === false) {
+      throw new Error("The uploaded file does not appear to be a valid resume or CV.");
+    }
+
     return NextResponse.json(
       {
         ...parsedResume,

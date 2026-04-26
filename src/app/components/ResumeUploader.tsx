@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { PortfolioData } from "@/app/types";
+import { useParseResumeMutation, useUpdateProfileMutation } from "@/hooks/useProfile";
 import styles from "./ResumeUploader.module.css";
 
 type UploadState = "idle" | "dragging" | "uploading" | "success" | "error";
@@ -16,6 +17,8 @@ export default function ResumeUploader({
   const [fileName, setFileName] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const parseResumeMutation = useParseResumeMutation();
+  const updateProfileMutation = useUpdateProfileMutation();
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -52,29 +55,12 @@ export default function ResumeUploader({
       }, 300);
 
       try {
-        const formData = new FormData();
-        formData.append("resume", file);
-
-        const res = await fetch("/api/parse-resume", {
-          method: "POST",
-          body: formData,
-        });
+        const parsedData = await parseResumeMutation.mutateAsync(file);
 
         clearInterval(progressInterval);
 
-        if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.error || "Failed to parse resume");
-        }
-
-        const parsedData = await res.json();
-
         // Save to profile
-        await fetch("/api/profile", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ portfolio_data: parsedData }),
-        });
+        await updateProfileMutation.mutateAsync({ portfolio_data: parsedData });
 
         setProgress(100);
         setState("success");

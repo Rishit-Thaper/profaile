@@ -12,13 +12,7 @@ import StepIndicator from "./components/StepIndicator";
 import ParsedDataPreview from "./components/ParsedDataPreview";
 import styles from "./dashboard.module.css";
 
-interface Profile {
-  id: string;
-  username: string | null;
-  portfolio_data: PortfolioData | null;
-  selected_theme: string;
-  is_published: boolean;
-}
+import { useProfileQuery, useUpdateProfileMutation, Profile } from "@/hooks/useProfile";
 
 type Step = "upload" | "preview" | "theme" | "username" | "publish";
 
@@ -27,28 +21,15 @@ export default function DashboardClient({
 }: {
   userEmail: string;
 }) {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: profile, isLoading: loading } = useProfileQuery();
+  const updateProfileMutation = useUpdateProfileMutation();
   const [currentStep, setCurrentStep] = useState<Step>("upload");
 
-  const fetchProfile = useCallback(async () => {
-    try {
-      const res = await fetch("/api/profile");
-      if (res.ok) {
-        const data = await res.json();
-        setProfile(data);
-        determineStep(data);
-      }
-    } catch (err) {
-      console.error("Failed to fetch profile:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+    if (profile) {
+      determineStep(profile);
+    }
+  }, [profile]);
 
   function determineStep(p: Profile) {
     if (
@@ -68,24 +49,15 @@ export default function DashboardClient({
   }
 
   async function updateProfile(updates: Partial<Profile>) {
-    const res = await fetch("/api/profile", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updates),
-    });
-    if (res.ok) {
-      const updated = await res.json();
-      setProfile(updated);
-      return updated;
-    }
-    throw new Error("Failed to update profile");
+    return updateProfileMutation.mutateAsync(updates);
   }
 
   function handleUploadComplete(data: PortfolioData) {
-    setProfile((prev) =>
-      prev ? { ...prev, portfolio_data: data } : prev,
-    );
-    setCurrentStep("preview");
+    if (profile) {
+      // The update to DB is handled in ResumeUploader now, or we can rely on React Query refetching
+      // But we immediately switch to preview step.
+      setCurrentStep("preview");
+    }
   }
 
   function handlePreviewContinue() {
