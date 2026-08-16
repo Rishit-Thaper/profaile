@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   const supabase = await createClient();
-  console.log(process.env.NEXT_PUBLIC_BASE_URL);
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {

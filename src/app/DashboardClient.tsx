@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { PortfolioData } from "@/app/types";
+import { useState } from "react";
 import "./dashboard-theme.css";
 import ResumeUploader from "./components/ResumeUploader";
 import ThemePicker from "./components/ThemePicker";
@@ -16,6 +15,53 @@ import { useProfileQuery, useUpdateProfileMutation, Profile } from "@/hooks/useP
 
 type Step = "upload" | "preview" | "theme" | "username" | "publish";
 
+const STEP_ORDER: Step[] = ["upload", "preview", "theme", "username", "publish"];
+const STEP_HEADINGS: Record<Step, { eyebrow: string; title: string; accent: string; desc: string }> = {
+  upload: {
+    eyebrow: "Step 1 of 5",
+    title: "Upload your resume",
+    accent: "resume",
+    desc: "Drop your PDF or DOCX — our AI will extract everything in seconds.",
+  },
+  preview: {
+    eyebrow: "Step 2 of 5",
+    title: "Here's what we extracted",
+    accent: "extracted",
+    desc: "Review the parsed data from your resume. You can always re-upload later.",
+  },
+  theme: {
+    eyebrow: "Step 3 of 5",
+    title: "Choose your theme",
+    accent: "theme",
+    desc: "Pick a design that represents you. Each theme is fully responsive.",
+  },
+  username: {
+    eyebrow: "Step 4 of 5",
+    title: "Claim your URL",
+    accent: "URL",
+    desc: "Pick a unique username for your portfolio link.",
+  },
+  publish: {
+    eyebrow: "Step 5 of 5",
+    title: "Go live",
+    accent: "live",
+    desc: "Your portfolio is ready. Hit publish to share it with the world.",
+  },
+};
+
+function deriveStep(p: Profile): Step {
+  if (!p.portfolio_data || Object.keys(p.portfolio_data).length === 0) {
+    return "upload";
+  }
+  if (!p.selected_theme) {
+    return "theme";
+  }
+  if (!p.username) {
+    return "username";
+  }
+  return "publish";
+}
+
 export default function DashboardClient({
   userEmail,
 }: {
@@ -24,38 +70,19 @@ export default function DashboardClient({
   const { data: profile, isLoading: loading } = useProfileQuery();
   const updateProfileMutation = useUpdateProfileMutation();
   const [currentStep, setCurrentStep] = useState<Step>("upload");
+  const [initialStepApplied, setInitialStepApplied] = useState(false);
 
-  useEffect(() => {
-    if (profile) {
-      determineStep(profile);
-    }
-  }, [profile]);
-
-  function determineStep(p: Profile) {
-    if (
-      !p.portfolio_data ||
-      Object.keys(p.portfolio_data).length === 0
-    ) {
-      setCurrentStep("upload");
-    } else if (!p.selected_theme) {
-      setCurrentStep("theme");
-    } else if (!p.username) {
-      setCurrentStep("username");
-    } else if (!p.is_published) {
-      setCurrentStep("publish");
-    } else {
-      setCurrentStep("publish");
-    }
+  if (profile && !initialStepApplied) {
+    setInitialStepApplied(true);
+    setCurrentStep(deriveStep(profile));
   }
 
   async function updateProfile(updates: Partial<Profile>) {
     return updateProfileMutation.mutateAsync(updates);
   }
 
-  function handleUploadComplete(data: PortfolioData) {
+  function handleUploadComplete() {
     if (profile) {
-      // The update to DB is handled in ResumeUploader now, or we can rely on React Query refetching
-      // But we immediately switch to preview step.
       setCurrentStep("preview");
     }
   }
@@ -84,22 +111,24 @@ export default function DashboardClient({
   if (loading) {
     return (
       <div className={styles.loadingScreen}>
+        <div className={styles.loadingMark} aria-hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 2 4.09 12.69a.5.5 0 0 0 .39.81H10l-1.05 8.03a.5.5 0 0 0 .86.42L20.45 10.9a.5.5 0 0 0-.39-.9H14l1.12-7.26A.5.5 0 0 0 13.78 2H13z" />
+          </svg>
+        </div>
         <div className={styles.loadingSpinner} />
         <p className={styles.loadingText}>Setting things up...</p>
       </div>
     );
   }
 
-  const steps: { key: Step; label: string }[] = [
-    { key: "upload", label: "Upload" },
-    { key: "preview", label: "Preview" },
-    { key: "theme", label: "Theme" },
-    { key: "username", label: "Username" },
-    { key: "publish", label: "Publish" },
-  ];
+  const steps: { key: Step; label: string }[] = STEP_ORDER.map((key) => ({
+    key,
+    label: STEP_HEADINGS[key].eyebrow.replace("Step ", "").replace(" of 5", ""),
+  }));
 
-  const stepOrder: Step[] = ["upload", "preview", "theme", "username", "publish"];
-  const currentStepIndex = stepOrder.indexOf(currentStep);
+  const currentStepIndex = STEP_ORDER.indexOf(currentStep);
+  const meta = STEP_HEADINGS[currentStep];
 
   return (
     <div className={styles.dashboard}>
@@ -115,7 +144,7 @@ export default function DashboardClient({
           currentStep={currentStep}
           onStepClick={(step) => {
             const s = step as Step;
-            const targetIndex = stepOrder.indexOf(s);
+            const targetIndex = STEP_ORDER.indexOf(s);
             // Only allow going back to completed steps
             if (targetIndex <= currentStepIndex) {
               setCurrentStep(s);
@@ -124,99 +153,98 @@ export default function DashboardClient({
         />
 
         <div className={styles.stepContent}>
-          {currentStep === "upload" && (
-            <div className="animate-fade-in-up">
-              <h2 className={styles.stepTitle}>
-                Upload your <span className="gradient-text">resume</span>
-              </h2>
-              <p className={styles.stepDescription}>
-                Drop your PDF or DOCX — our AI will extract everything in seconds.
-              </p>
-              <ResumeUploader onComplete={handleUploadComplete} />
-              {profile?.portfolio_data &&
-                Object.keys(profile.portfolio_data).length > 0 && (
-                  <button
-                    className={styles.skipButton}
-                    onClick={() => setCurrentStep("preview")}
-                  >
-                    Already uploaded? Skip to preview →
-                  </button>
-                )}
+          <div className={styles.stepCard}>
+            <div className={styles.eyebrow}>
+              <span className={styles.eyebrowDot} />
+              {meta.eyebrow}
             </div>
-          )}
+            <h2 className={styles.stepTitle}>
+              {meta.title.split(" ").map((word, i) => {
+                const last = meta.title.split(" ").length - 1;
+                return i === last ? (
+                  <span key={i} className="gradient-text">
+                    {word}
+                  </span>
+                ) : (
+                  <span key={i}>{word} </span>
+                );
+              })}
+            </h2>
+            <p className={styles.stepDescription}>{meta.desc}</p>
 
-          {currentStep === "preview" && profile?.portfolio_data && (
-            <div className="animate-fade-in-up">
-              <h2 className={styles.stepTitle}>
-                Here&apos;s what we <span className="gradient-text">extracted</span>
-              </h2>
-              <p className={styles.stepDescription}>
-                Review the parsed data from your resume. You can always re-upload later.
-              </p>
-              <ParsedDataPreview data={profile.portfolio_data} />
-              <div className={styles.previewActions}>
-                <button
-                  className={styles.secondaryButton}
-                  onClick={() => setCurrentStep("upload")}
-                >
-                  ← Re-upload
-                </button>
-                <button
-                  className={styles.primaryButton}
-                  onClick={handlePreviewContinue}
-                >
-                  Looks good, pick a theme →
-                </button>
+            {currentStep === "upload" && (
+              <div className="animate-fade-in-up">
+                <ResumeUploader onComplete={handleUploadComplete} />
+                {profile?.portfolio_data &&
+                  Object.keys(profile.portfolio_data).length > 0 && (
+                    <button
+                      className={styles.skipButton}
+                      onClick={() => setCurrentStep("preview")}
+                    >
+                      Already uploaded? Skip to preview →
+                    </button>
+                  )}
               </div>
-            </div>
-          )}
+            )}
 
-          {currentStep === "theme" && (
-            <div className="animate-fade-in-up">
-              <h2 className={styles.stepTitle}>
-                Choose your <span className="gradient-text">theme</span>
-              </h2>
-              <p className={styles.stepDescription}>
-                Pick a design that represents you. Each theme is fully responsive.
-              </p>
-              <ThemePicker
-                currentTheme={profile?.selected_theme ?? "minimal"}
-                onSelect={handleThemeSelect}
-              />
-            </div>
-          )}
+            {currentStep === "preview" && profile?.portfolio_data && (
+              <div className="animate-fade-in-up">
+                <ParsedDataPreview data={profile.portfolio_data} />
+                <div className={styles.previewActions}>
+                  <button
+                    className={styles.secondaryButton}
+                    onClick={() => setCurrentStep("upload")}
+                  >
+                    ← Re-upload
+                  </button>
+                  <button
+                    className={styles.primaryButton}
+                    onClick={handlePreviewContinue}
+                  >
+                    Looks good, pick a theme
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                      <path
+                        d="M3 8h10M9 4l4 4-4 4"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
 
-          {currentStep === "username" && (
-            <div className="animate-fade-in-up">
-              <h2 className={styles.stepTitle}>
-                Claim your <span className="gradient-text">URL</span>
-              </h2>
-              <p className={styles.stepDescription}>
-                Pick a unique username for your portfolio link.
-              </p>
-              <UsernameInput
-                currentUsername={profile?.username ?? ""}
-                onSet={handleUsernameSet}
-              />
-            </div>
-          )}
+            {currentStep === "theme" && (
+              <div className="animate-fade-in-up">
+                <ThemePicker
+                  currentTheme={profile?.selected_theme ?? "minimal"}
+                  onSelect={handleThemeSelect}
+                />
+              </div>
+            )}
 
-          {currentStep === "publish" && profile && (
-            <div className="animate-fade-in-up">
-              <h2 className={styles.stepTitle}>
-                Go <span className="gradient-text">live</span>
-              </h2>
-              <p className={styles.stepDescription}>
-                Your portfolio is ready. Hit publish to share it with the world.
-              </p>
-              <PublishButton
-                isPublished={profile.is_published}
-                username={profile.username}
-                selectedTheme={profile.selected_theme}
-                onToggle={handlePublishToggle}
-              />
-            </div>
-          )}
+            {currentStep === "username" && (
+              <div className="animate-fade-in-up">
+                <UsernameInput
+                  currentUsername={profile?.username ?? ""}
+                  onSet={handleUsernameSet}
+                />
+              </div>
+            )}
+
+            {currentStep === "publish" && profile && (
+              <div className="animate-fade-in-up">
+                <PublishButton
+                  isPublished={profile.is_published}
+                  username={profile.username}
+                  selectedTheme={profile.selected_theme}
+                  onToggle={handlePublishToggle}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>

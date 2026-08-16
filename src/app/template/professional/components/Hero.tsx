@@ -2,6 +2,7 @@
 
 import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";
+import Portrait from "../../_shared/Portrait";
 import {
   IconArrow,
   IconBehance,
@@ -175,6 +176,15 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
             className={`col-span-12 lg:col-span-5 transition-all duration-1000 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
           >
             <div className="border border-[#F5F0E8]/10 bg-[#F5F0E8]/[0.03] backdrop-blur-sm p-8">
+              {/* Portrait */}
+              {data.photo && data.photo_visible !== false && (
+                <div className="mb-6 pb-6 border-b border-[#F5F0E8]/10 flex justify-center">
+                  <Portrait
+                    data={data}
+                    className="w-40 h-40 rounded-full object-cover border-2 border-[#C4622D]/60"
+                  />
+                </div>
+              )}
               {/* Location & contact */}
               <div className="flex items-center gap-2 text-[#F5F0E8]/40 text-xs mb-6 pb-6 border-b border-[#F5F0E8]/10">
                 <IconPin />

@@ -24,7 +24,7 @@
 
 .selected {
   border-color: var(--accent-primary) !important;
-  box-shadow: 0 0 24px rgba(124, 92, 252, 0.15) !important;
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.15) !important;
 }
 
 /* ─── Preview ─── */
@@ -42,6 +42,8 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  border: 1.5px solid var(--accent-primary);
+  box-shadow: inset 0 0 0 1px var(--accent-primary);
   animation: fadeIn 0.3s ease forwards;
 }
 
@@ -145,7 +147,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--accent-primary);
-  background: rgba(124, 92, 252, 0.1);
+  background: rgba(59, 130, 246, 0.1);
   padding: 3px 8px;
   border-radius: var(--radius-full);
 }

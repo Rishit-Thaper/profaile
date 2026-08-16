@@ -76,9 +76,9 @@ export default function YourThemeNamePortfolio() {
 *Note: In the final dynamic route (`/p/[username]/page.tsx`), your theme components will be dynamically imported and passed real user data.*
 
 ### Step 4: Register Your Theme
-Once your theme looks amazing locally, you need to make it selectable in the dashboard.
+Once your theme looks amazing locally, you need to make it selectable in the dashboard and in the renderer. There are three places to register it:
 
-Open `src/app/components/ThemePicker.tsx`. Locate the `themes` array at the top of the file and add your new theme:
+**a) `src/app/components/ThemePicker.tsx`** — Locate the `themes` array at the top of the file and add your new theme:
 
 ```typescript
 const themes = [
@@ -99,7 +99,38 @@ const themes = [
 ```
 *The `preview` object powers the mini-mockup generated in the Theme Picker UI.*
 
-### Step 5: Test and Submit!
+**b) `src/themes/index.ts`** — Import your theme wrapper and add it to the `THEMES` record so the portfolio renderer can use it:
+
+```typescript
+import YourTheme from "./YourTheme";
+
+const THEMES: Record<string, ThemeComponent> = {
+  // ... existing themes
+  "your-theme-name": YourTheme,
+};
+```
+
+**c) `src/libs/theme-registry.ts`** — Add your theme id to the `THEME_IDS` array. This powers server-side validation on `/api/profile` so unknown theme names are rejected:
+
+```typescript
+export const THEME_IDS = [/* ...existing ids */, "your-theme-name"] as const;
+```
+
+> If your theme has a distinctive accent color, also add it to the `CHAT_ACCENTS` map in `src/app/p/[username]/PortfolioRenderer.tsx` so the AI chat widget matches your theme.
+
+### Step 5: Database Constraint
+The `profiles.selected_theme` column has a `CHECK` constraint listing every valid theme. If you add a new theme you must update it in the Supabase SQL editor:
+
+```sql
+ALTER TABLE public.profiles
+  DROP CONSTRAINT profiles_selected_theme_check;
+
+ALTER TABLE public.profiles
+  ADD CONSTRAINT profiles_selected_theme_check
+  CHECK (selected_theme IN ('minimal', 'modern', 'professional', 'neon', 'elegant', 'vibrant', 'terminal', 'your-theme-name'));
+```
+
+### Step 6: Test and Submit!
 1. Go to your local dashboard (`http://localhost:3000/edit` or the theme selection step).
 2. Select your new theme and verify that the preview works and that publishing applies the theme properly.
 3. Take a screenshot or record a short GIF of your theme.

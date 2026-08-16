@@ -59,5 +59,5 @@ export default async function PortfolioPage({ params }: PageProps) {
   const portfolioData = profile.portfolio_data as PortfolioData;
   const theme = profile.selected_theme || "minimal";
 
-  return <PortfolioRenderer data={portfolioData} theme={theme} />;
+  return <PortfolioRenderer data={portfolioData} theme={theme} username={username} />;
 }

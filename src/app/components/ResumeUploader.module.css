@@ -24,48 +24,17 @@
   overflow: hidden;
 }
 
-.uploadZone::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    rgba(124, 92, 252, 0.03) 0%,
-    transparent 70%
-  );
-  pointer-events: none;
-  transition: opacity var(--duration-normal) var(--ease-out);
-}
-
 .uploadZone:hover {
   border-color: var(--accent-primary);
   background: var(--bg-card);
 }
 
-.uploadZone:hover::before {
-  opacity: 1;
-  background: radial-gradient(
-    circle at center,
-    rgba(124, 92, 252, 0.06) 0%,
-    transparent 70%
-  );
-}
-
 /* ─── Dragging ─── */
 .dragging {
   border-color: var(--accent-primary) !important;
-  background: rgba(124, 92, 252, 0.05) !important;
+  background: rgba(59, 130, 246, 0.05) !important;
   transform: scale(1.01);
-  box-shadow: 0 0 40px rgba(124, 92, 252, 0.1);
-}
-
-.dragging::before {
-  opacity: 1 !important;
-  background: radial-gradient(
-    circle at center,
-    rgba(124, 92, 252, 0.1) 0%,
-    transparent 70%
-  ) !important;
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.1);
 }
 
 /* ─── Icon ─── */

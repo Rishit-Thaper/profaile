@@ -134,19 +134,13 @@ export default function ResumeUploader({
                   cy="32"
                   r="28"
                   fill="none"
-                  stroke="url(#gradient)"
+                  stroke="var(--accent-primary)"
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeDasharray="176"
                   strokeDashoffset={176 - (176 * progress) / 100}
                   className={styles.progressCircle}
                 />
-                <defs>
-                  <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#7c5cfc" />
-                    <stop offset="100%" stopColor="#5cfcb5" />
-                  </linearGradient>
-                </defs>
               </svg>
               <span className={styles.progressText}>
                 {Math.round(progress)}%
