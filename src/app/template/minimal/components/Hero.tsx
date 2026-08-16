@@ -1,4 +1,5 @@
 import ArrowUpRight from "@/app/components/ArrowUpright";
+import Portrait from "../../_shared/Portrait";
 import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";
 
@@ -19,6 +20,16 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
           <span className="font-mono text-xs text-[#E8E4DC]/20 tracking-[0.2em] uppercase">
             Portfolio
           </span>
+        </div>
+
+        {/* Portrait */}
+        <div
+          className={`transition-all duration-700 delay-[50ms] ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+        >
+          <Portrait
+            data={data}
+            className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover grayscale contrast-[0.9] border border-[#E8E4DC]/15"
+          />
         </div>
 
         {/* Name */}

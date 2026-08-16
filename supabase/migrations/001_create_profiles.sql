@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   username TEXT UNIQUE,
   portfolio_data JSONB DEFAULT '{}'::jsonb,
-  selected_theme TEXT DEFAULT 'minimal' CHECK (selected_theme IN ('minimal', 'modern', 'professional')),
+  selected_theme TEXT DEFAULT 'minimal' CHECK (selected_theme IN ('minimal', 'modern', 'professional', 'neon', 'elegant', 'vibrant', 'terminal')),
   is_published BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()

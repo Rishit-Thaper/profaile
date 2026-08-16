@@ -14,7 +14,7 @@
 
 .inputGroup:focus-within {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 20px rgba(124, 92, 252, 0.1);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
 }
 
 .prefix {
@@ -95,7 +95,7 @@
 .claimButton:hover:not(:disabled) {
   background-position: right center;
   transform: translateY(-1px);
-  box-shadow: 0 4px 24px rgba(124, 92, 252, 0.3);
+  box-shadow: 0 4px 24px rgba(59, 130, 246, 0.3);
 }
 
 .claimButton:disabled {

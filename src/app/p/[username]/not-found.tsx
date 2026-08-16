@@ -9,8 +9,8 @@ export default function NotFound() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "#08080c",
-        color: "#f0f0f5",
+        background: "#000000",
+        color: "#ffffff",
         fontFamily: "'Inter', -apple-system, sans-serif",
         textAlign: "center",
         padding: "24px",
@@ -23,9 +23,8 @@ export default function NotFound() {
           letterSpacing: "-0.04em",
           lineHeight: 1,
           marginBottom: "12px",
-          background: "linear-gradient(135deg, #7c5cfc, #5c9dfc, #5cfcb5)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
+          fontFamily: "'Sora', 'Inter', sans-serif",
+          color: "#3b82f6",
         }}
       >
         404
@@ -33,7 +32,7 @@ export default function NotFound() {
       <p
         style={{
           fontSize: "1.1rem",
-          color: "#8b8b9e",
+          color: "rgba(255, 255, 255, 0.7)",
           marginBottom: "32px",
           maxWidth: "360px",
           lineHeight: 1.5,
@@ -46,7 +45,7 @@ export default function NotFound() {
         style={{
           display: "inline-flex",
           padding: "12px 28px",
-          background: "linear-gradient(135deg, #7c5cfc 0%, #5c9dfc 100%)",
+          background: "#3b82f6",
           color: "#fff",
           borderRadius: "9999px",
           fontSize: "0.9rem",

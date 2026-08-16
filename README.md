@@ -7,7 +7,8 @@ Profaile is an open-source web application that allows developers and profession
 ## ✨ Features
 
 - **AI-Powered Parsing:** Upload your resume and let Gemini automatically extract your experience, projects, education, and calculate impressive core stats.
-- **Multiple Premium Themes:** Choose from Minimal, Modern, or Professional aesthetics.
+- **Seven Premium Themes:** Choose from Minimal, Modern, Professional, Neon, Elegant, Vibrant, or Terminal aesthetics.
+- **AI Portfolio Assistant (RAG):** Every published portfolio automatically gets an AI chat widget. Visitors can ask questions about the owner's experience, projects, and skills — answers are grounded in the portfolio's own data using retrieval-augmented generation, with cited sources.
 - **Instant Preview & Editing:** Review the parsed data and tweak any fields in a seamless editor interface.
 - **Custom URLs:** Claim a unique username (e.g., `profaile.app/p/your-name`) to share with recruiters.
 - **Lightning Fast:** Built with Next.js App Router and TanStack React Query for snappy performance and instant updates.
@@ -41,7 +42,7 @@ Create a `.env.local` file in the root of your project and add the following key
 ```env
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 
 # Gemini AI Configuration
 NEXT_GEMINI_API_KEY=your_gemini_api_key

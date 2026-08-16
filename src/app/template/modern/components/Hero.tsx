@@ -2,6 +2,7 @@
 
 import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";
+import Portrait from "../../_shared/Portrait";
 import { ACCENTS } from "./constants";
 import {
   Blob,
@@ -29,7 +30,6 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
     { val: "25%", label: "Perf. Gain", color: "#FFB347", bg: "#FFF8EE" },
     { val: "8.5", label: "CGPA", color: "#26C6B0", bg: "#EDFCFA" },
   ];
-  console.log("stats", stats)
   const displayStats = stats && stats.length > 0
     ? stats.map((s, i) => ({
       ...s,
@@ -211,10 +211,18 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
             </div>
           </div>
 
-          {/* Right — stat cards */}
+          {/* Right — photo + stat cards */}
           <div
             className={`grid grid-cols-2 gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
           >
+            {data.photo && data.photo_visible !== false && (
+              <div className="col-span-2 flex justify-center lg:justify-start">
+                <Portrait
+                  data={data}
+                  className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-xl"
+                />
+              </div>
+            )}
             {displayStats.map((s, i) => (
               <div
                 key={i}

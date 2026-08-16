@@ -16,7 +16,22 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  gap: 16px;
+  gap: 20px;
+  position: relative;
+}
+
+.loadingMark {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--accent-gradient);
+  background-size: 200% auto;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px var(--accent-glow-strong);
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 .loadingSpinner {
@@ -40,27 +55,61 @@
   max-width: 860px;
   width: 100%;
   margin: 0 auto;
-  padding: 40px 24px 80px;
+  padding: 32px 24px 80px;
 }
 
-/* ─── Step Content ─── */
+/* ─── Step Card ─── */
 .stepContent {
-  margin-top: 48px;
+  margin-top: 40px;
 }
 
-.stepTitle {
-  font-size: 2rem;
+.stepCard {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 40px 44px;
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+/* ─── Eyebrow ─── */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-  margin-bottom: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+}
+
+.eyebrowDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  box-shadow: 0 0 10px var(--accent-glow-strong);
+}
+
+/* ─── Titles ─── */
+.stepTitle {
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  font-family: var(--font-display);
 }
 
 .stepDescription {
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.6;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
   max-width: 480px;
 }
 
@@ -69,9 +118,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 28px;
-  background: var(--accent-gradient);
-  background-size: 200% auto;
+  padding: 13px 30px;
+  background: var(--accent-primary);
   color: #fff;
   border: none;
   border-radius: var(--radius-full);
@@ -80,14 +128,20 @@
   font-weight: 600;
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-out);
-  animation: border-flow 3s ease infinite;
+}
+
+.primaryButton svg {
+  transition: transform var(--duration-normal) var(--ease-out);
 }
 
 .primaryButton:hover {
-  background-size: 200% auto;
-  background-position: right center;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 24px rgba(124, 92, 252, 0.3);
+  background: var(--accent-gradient-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px var(--accent-glow-strong);
+}
+
+.primaryButton:hover svg {
+  transform: translateX(3px);
 }
 
 .primaryButton:active {
@@ -98,7 +152,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 28px;
+  padding: 12px 26px;
   background: transparent;
   color: var(--text-secondary);
   border: 1px solid var(--border-default);
@@ -113,23 +167,30 @@
 .secondaryButton:hover {
   color: var(--text-primary);
   border-color: var(--border-hover);
-  background: var(--bg-card);
+  background: var(--bg-card-hover);
+  transform: translateY(-1px);
 }
 
 .skipButton {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-top: 20px;
+  padding: 8px 14px;
   background: none;
-  border: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
   color: var(--text-tertiary);
   font-family: var(--font-sans);
   font-size: 0.85rem;
   cursor: pointer;
-  transition: color var(--duration-fast) ease;
+  transition: all var(--duration-fast) ease;
 }
 
 .skipButton:hover {
   color: var(--accent-primary);
+  border-color: var(--accent-glow);
+  background: var(--accent-glow);
 }
 
 .previewActions {
@@ -142,18 +203,29 @@
 /* ─── Responsive ─── */
 @media (max-width: 640px) {
   .main {
-    padding: 24px 16px 64px;
+    padding: 20px 14px 64px;
+  }
+
+  .stepCard {
+    padding: 28px 20px;
+    border-radius: var(--radius-lg);
   }
 
   .stepTitle {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   .stepDescription {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
   .previewActions {
     flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+    justify-content: center;
   }
 }

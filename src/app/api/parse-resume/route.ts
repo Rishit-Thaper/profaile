@@ -213,7 +213,6 @@ async function parseResumeWithAI(
   });
 
   const text = response.text;
-  console.log("text", text)
   if (!text) {
     throw new Error("AI model returned an empty response.");
   }
@@ -223,9 +222,6 @@ async function parseResumeWithAI(
     .replace(/^```json\n?/, "")
     .replace(/\n?```$/, "")
     .trim();
-
-  console.log("cleaned", cleaned)
-  console.log("JSON.parse(cleaned)", JSON.parse(cleaned));
 
   return JSON.parse(cleaned);
 }
@@ -259,7 +255,6 @@ export async function POST(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.log("error", error)
     const message =
       error instanceof Error ? error.message : "An unexpected error occurred.";
     const status =

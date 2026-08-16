@@ -40,6 +40,54 @@ const themes = [
       card: "#132B1E",
     },
   },
+  {
+    id: "neon",
+    name: "Neon",
+    description: "Dark cyber-tech with glowing gradient accents",
+    colors: ["#0A0A12", "#00E5FF", "#FF2E93"],
+    preview: {
+      bg: "#0A0A12",
+      accent: "#00E5FF",
+      text: "#EAF6FF",
+      card: "#12121D",
+    },
+  },
+  {
+    id: "elegant",
+    name: "Elegant",
+    description: "Light editorial serif with refined gold details",
+    colors: ["#FAF7F0", "#A98647", "#26221C"],
+    preview: {
+      bg: "#FAF7F0",
+      accent: "#A98647",
+      text: "#26221C",
+      card: "#FFFFFF",
+    },
+  },
+  {
+    id: "vibrant",
+    name: "Vibrant",
+    description: "Bold neo-brutalist colors with hard shadows",
+    colors: ["#FFFFFF", "#FF4D6D", "#8338EC"],
+    preview: {
+      bg: "#FFFFFF",
+      accent: "#FF4D6D",
+      text: "#111111",
+      card: "#FFE3E9",
+    },
+  },
+  {
+    id: "terminal",
+    name: "Terminal",
+    description: "Hacker-green monospace with terminal windows",
+    colors: ["#0D0D0D", "#00FF9C", "#00B3FF"],
+    preview: {
+      bg: "#0D0D0D",
+      accent: "#00FF9C",
+      text: "#D4FFEA",
+      card: "#111111",
+    },
+  },
 ];
 
 export default function ThemePicker({
@@ -148,14 +196,9 @@ export default function ThemePicker({
                 />
               </div>
 
-              {/* Hover glow */}
+              {/* Selected/hover ring */}
               {(isHovered || isSelected) && (
-                <div
-                  className={styles.previewGlow}
-                  style={{
-                    background: `radial-gradient(circle at center, ${theme.preview.accent}20 0%, transparent 70%)`,
-                  }}
-                />
+                <div className={styles.previewGlow} />
               )}
             </div>
 

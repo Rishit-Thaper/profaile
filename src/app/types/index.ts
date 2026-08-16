@@ -4,6 +4,8 @@ export interface PersonalInfo {
   email: string;
   location: string;
   phone: string;
+  photo?: string;
+  photo_visible?: boolean;
   leetcode?: string;
   codechef?: string;
   codeforces?: string;

@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/libs/supabase/client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./DashboardHeader.module.css";
 
 export default function DashboardHeader({
@@ -16,6 +17,7 @@ export default function DashboardHeader({
 }) {
   const supabase = createClient();
   const router = useRouter();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -39,25 +41,52 @@ export default function DashboardHeader({
     router.push("/login");
   };
 
-  const handleEdit = () => {
-    setMenuOpen(false);
-    // Navigate to actual edit profile page
-    router.push("/edit");
-  };
-
   const initials = email
     .split("@")[0]
     .slice(0, 2)
     .toUpperCase();
 
+  const navItems = [
+    { href: "/", label: "Dashboard" },
+    { href: "/edit", label: "Edit Profile" },
+  ];
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.left}>
-          <div className={styles.logo}>
-            <span className={styles.logoIcon}>⚡</span>
+          <button
+            className={styles.logo}
+            onClick={() => router.push("/")}
+            aria-label="Profaile home"
+          >
+            <span className={styles.logoMark} aria-hidden>
+              <Image
+                src="/20260816_152547.jpg"
+                alt="Profaile logo"
+                width={30}
+                height={30}
+                className={styles.logoImg}
+                priority
+              />
+            </span>
             <span className={styles.logoText}>profaile</span>
-          </div>
+          </button>
+
+          <nav className={styles.nav} aria-label="Primary">
+            {navItems.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <button
+                  key={item.href}
+                  className={`${styles.navItem} ${active ? styles.navItemActive : ""}`}
+                  onClick={() => router.push(item.href)}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </nav>
         </div>
 
         <div className={styles.right}>
@@ -69,7 +98,7 @@ export default function DashboardHeader({
               className={styles.liveLink}
             >
               <span className={styles.liveDot} />
-              Live
+              View site
             </a>
           )}
 
@@ -85,11 +114,34 @@ export default function DashboardHeader({
 
             {menuOpen && (
               <div className={styles.dropdown}>
-                <div className={styles.dropdownEmail}>{email}</div>
+                <div className={styles.dropdownHeader}>
+                  <span className={styles.dropdownAvatar}>{initials}</span>
+                  <span className={styles.dropdownEmail}>{email}</span>
+                </div>
                 <div className={styles.dropdownDivider} />
                 <button
                   className={styles.dropdownItem}
-                  onClick={handleEdit}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    router.push("/");
+                  }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                    <path
+                      d="M2.5 6.5 8 2l5.5 4.5V13a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1V6.5Z"
+                      stroke="currentColor"
+                      strokeWidth="1.3"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Dashboard
+                </button>
+                <button
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    router.push("/edit");
+                  }}
                 >
                   <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
                     <path
@@ -102,6 +154,7 @@ export default function DashboardHeader({
                   </svg>
                   Edit Profile
                 </button>
+                <div className={styles.dropdownDivider} />
                 <button
                   className={`${styles.dropdownItem} ${styles.dropdownLogout}`}
                   onClick={handleLogout}

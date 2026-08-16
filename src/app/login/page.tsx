@@ -1,9 +1,34 @@
+import Image from "next/image";
 import "../dashboard-theme.css";
 import styles from "./login.module.css";
+import SignInButton from "./SignInButton";
+
+const FEATURES = [
+  {
+    title: "AI parses your resume",
+    desc: "Experience, projects & skills extracted in seconds",
+    color: "#3b82f6",
+  },
+  {
+    title: "Pick from 7 premium themes",
+    desc: "Minimal, Neon, Elegant, Terminal and more",
+    color: "#60a5fa",
+  },
+  {
+    title: "An AI assistant on your page",
+    desc: "Visitors chat with your portfolio — grounded in RAG",
+    color: "#93c5fd",
+  },
+  {
+    title: "Go live in one click",
+    desc: "Get a custom URL to share with recruiters",
+    color: "#dbeafe",
+  },
+];
 
 export default function LoginPage() {
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} noise-overlay`}>
       {/* Background effects */}
       <div className={styles.bgGlow1} />
       <div className={styles.bgGlow2} />
@@ -13,8 +38,18 @@ export default function LoginPage() {
         <div className={`${styles.card} animate-fade-in-scale`}>
           {/* Logo */}
           <div className={styles.logoSection}>
-            <span className={styles.logoEmoji}>⚡</span>
+            <span className={styles.logoMark} aria-hidden>
+              <Image
+                src="/20260816_152547.jpg"
+                alt="Profaile logo"
+                width={32}
+                height={32}
+                className={styles.logoImg}
+                priority
+              />
+            </span>
             <h1 className={styles.logoTitle}>profaile</h1>
+            <span className={styles.logoBadge}>beta</span>
           </div>
 
           {/* Headline */}
@@ -25,50 +60,39 @@ export default function LoginPage() {
           </h2>
 
           <p className={styles.subtext}>
-            Upload your resume, choose a theme, get a live portfolio site —
-            instantly powered by AI.
+            Upload your resume, choose a theme, and get a live portfolio with an
+            AI assistant — instantly powered by AI.
           </p>
 
           {/* Features */}
           <div className={styles.features}>
-            <div className={styles.feature}>
-              <span className={styles.featureIcon}>📄</span>
-              <span className={styles.featureText}>AI parses your resume</span>
-            </div>
-            <div className={styles.feature}>
-              <span className={styles.featureIcon}>🎨</span>
-              <span className={styles.featureText}>Pick from stunning themes</span>
-            </div>
-            <div className={styles.feature}>
-              <span className={styles.featureIcon}>🚀</span>
-              <span className={styles.featureText}>Go live in one click</span>
-            </div>
+            {FEATURES.map((feature) => (
+              <div className={styles.feature} key={feature.title}>
+                <span
+                  className={styles.featureIcon}
+                  style={{ background: `${feature.color}1f`, color: feature.color }}
+                  aria-hidden
+                >
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                    <path
+                      d="M2 5.5L4.2 7.7L9 3"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span className={styles.featureText}>
+                  <strong>{feature.title}</strong>
+                  <span className={styles.featureDesc}>{feature.desc}</span>
+                </span>
+              </div>
+            ))}
           </div>
 
           {/* Login Button */}
-          <form action="/auth/login" method="GET">
-            <button type="submit" className={styles.googleButton}>
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path
-                  d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"
-                  fill="#4285F4"
-                />
-                <path
-                  d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"
-                  fill="#34A853"
-                />
-                <path
-                  d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
-                  fill="#FBBC05"
-                />
-                <path
-                  d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
-                  fill="#EA4335"
-                />
-              </svg>
-              Continue with Google
-            </button>
-          </form>
+          <SignInButton />
 
           <p className={styles.disclaimer}>
             Free forever • No credit card required

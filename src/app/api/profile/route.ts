@@ -1,5 +1,8 @@
 import { createClient } from "@/libs/supabase/server";
+import { isValidTheme } from "@/libs/theme-registry";
 import { NextRequest, NextResponse } from "next/server";
+
+const USERNAME_REGEX = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/;
 
 /* ────────────────────────── GET /api/profile ────────────────────────── */
 export async function GET() {
@@ -70,6 +73,31 @@ export async function PUT(req: NextRequest) {
     if (body[field] !== undefined) {
       updates[field] = body[field];
     }
+  }
+
+  if (updates.username !== undefined) {
+    if (
+      typeof updates.username !== "string" ||
+      updates.username.length < 3 ||
+      updates.username.length > 30 ||
+      !USERNAME_REGEX.test(updates.username)
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Username must be 3-30 characters using lowercase letters, numbers, and hyphens",
+        },
+        { status: 400 },
+      );
+    }
+  }
+
+  if (updates.selected_theme !== undefined && !isValidTheme(updates.selected_theme)) {
+    return NextResponse.json({ error: "Unknown theme" }, { status: 400 });
+  }
+
+  if (updates.is_published !== undefined && typeof updates.is_published !== "boolean") {
+    return NextResponse.json({ error: "is_published must be a boolean" }, { status: 400 });
   }
 
   if (Object.keys(updates).length === 0) {
