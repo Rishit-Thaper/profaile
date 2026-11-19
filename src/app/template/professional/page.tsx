@@ -1,6 +1,6 @@
 "use client";
 
-import { data } from "@/libs/constants";
+import { data } from "@/features/portfolio/constants/demo-portfolio";
 import CustomCursor from "./components/CustomCursor";
 import Education from "./components/Education";
 import Experience from "./components/Experience";

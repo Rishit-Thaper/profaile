@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCheckUsernameQuery } from "@/features/profile/api/profile";
+import { usernamePattern } from "@/features/profile/utils/username";
 import styles from "./UsernameInput.module.css";
 
 export default function UsernameInput({
@@ -26,7 +27,7 @@ export default function UsernameInput({
     return () => clearTimeout(timer);
   }, [value]);
 
-  const isValid = debouncedValue.length >= 3 && /^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(debouncedValue);
+  const isValid = debouncedValue.length >= 3 && usernamePattern.test(debouncedValue);
 
   const { data, isFetching, isError } = useCheckUsernameQuery(
     debouncedValue,
