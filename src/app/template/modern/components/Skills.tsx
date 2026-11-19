@@ -1,6 +1,6 @@
 "use client";
 
-import { useInView } from "@/app/hooks/useInView";
+import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Skills as SkillsType } from "@/app/types";
 import { SKILL_COLORS } from "./constants";
 import SectionHeader from "./SectionHeader";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useInView } from "@/app/hooks/useInView";
+import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Experience as ExperienceType } from "@/app/types";
 import { ACCENTS } from "./constants";
 import SectionHeader from "./SectionHeader";

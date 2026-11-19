@@ -1,29 +1,23 @@
 import { createClient } from "@/libs/supabase/server";
 import { isValidTheme } from "@/libs/theme-registry";
+import { getUsernameValidationError } from "@/features/profile/utils/username";
 import { NextRequest, NextResponse } from "next/server";
-
-const USERNAME_REGEX = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/;
-
-/* ────────────────────────── GET /api/profile ────────────────────────── */
 export async function GET() {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log("user", user)
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let { data: profile, error } = await supabase
+  let { data: profile } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
-  // Create the profile if it doesn't exist 
-  // (happens if they signed up before the db trigger was added, or if the trigger failed)
   if (!profile) {
     const baseName = user.email ? user.email.split("@")[0].toLowerCase() : "user";
     const randomSuffix = Math.random().toString(36).substring(2, 6);
@@ -46,7 +40,6 @@ export async function GET() {
   return NextResponse.json(profile);
 }
 
-/* ────────────────────────── PUT /api/profile ────────────────────────── */
 export async function PUT(req: NextRequest) {
   const supabase = await createClient();
 
@@ -60,7 +53,6 @@ export async function PUT(req: NextRequest) {
 
   const body = await req.json();
 
-  // Only allow updating specific fields
   const allowedFields = [
     "username",
     "selected_theme",
@@ -76,17 +68,10 @@ export async function PUT(req: NextRequest) {
   }
 
   if (updates.username !== undefined) {
-    if (
-      typeof updates.username !== "string" ||
-      updates.username.length < 3 ||
-      updates.username.length > 30 ||
-      !USERNAME_REGEX.test(updates.username)
-    ) {
+    const usernameError = getUsernameValidationError(updates.username);
+    if (usernameError) {
       return NextResponse.json(
-        {
-          error:
-            "Username must be 3-30 characters using lowercase letters, numbers, and hyphens",
-        },
+        { error: usernameError },
         { status: 400 },
       );
     }
@@ -112,7 +97,6 @@ export async function PUT(req: NextRequest) {
     .single();
 
   if (error) {
-    // Handle unique constraint on username
     if (error.code === "23505") {
       return NextResponse.json(
         { error: "Username already taken" },

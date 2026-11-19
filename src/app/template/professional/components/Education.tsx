@@ -1,6 +1,6 @@
 "use client";
 
-import { useInView } from "@/app/hooks/useInView";
+import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Education as EducationType } from "@/app/types";
 
 export default function Education({ data }: { data: EducationType[] }) {

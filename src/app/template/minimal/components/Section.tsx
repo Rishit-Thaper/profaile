@@ -1,4 +1,4 @@
-import { useInView } from "@/app/hooks/useInView";
+import { useInView } from "@/features/portfolio/hooks/useInView";
 
 export default function Section({
   id,

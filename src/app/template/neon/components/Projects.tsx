@@ -1,6 +1,6 @@
 "use client";
 
-import { useInView } from "@/app/hooks/useInView";
+import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Projects as ProjectType } from "@/app/types";
 import { IconArrowUpRight, IconBehance, IconDribbble, IconFigma, IconGithub, IconLink, IconMedium, IconTwitter, IconYoutube } from "../../_shared/icons";
 

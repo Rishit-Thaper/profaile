@@ -1,6 +1,6 @@
 "use client";
 
-import { useInView } from "@/app/hooks/useInView";
+import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Experience as ExperienceType } from "@/app/types";
 
 export default function Experience({ data }: { data: ExperienceType[] }) {

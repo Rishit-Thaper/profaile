@@ -3,6 +3,7 @@ export const runtime = "nodejs";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { PortfolioData } from "@/app/types";
+import { getUsernameValidationError } from "@/features/profile/utils/username";
 import { retrieveRelevantChunks } from "@/libs/rag";
 import { createClient } from "@/libs/supabase/server";
 
@@ -11,8 +12,6 @@ const ai = new GoogleGenAI({
 });
 
 const MODEL = "gemini-2.5-flash";
-
-const USERNAME_REGEX = /^[a-z0-9][a-z0-9-]*[a-z0-9]$/;
 
 const MAX_MESSAGE_LENGTH = 600;
 const MAX_HISTORY_TURNS = 8;
@@ -90,7 +89,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { username, message } = body;
-    if (typeof username !== "string" || !USERNAME_REGEX.test(username)) {
+    if (typeof username !== "string" || getUsernameValidationError(username)) {
       return NextResponse.json({ error: "Invalid username" }, { status: 400 });
     }
     if (typeof message !== "string" || message.trim().length === 0) {

@@ -27,7 +27,7 @@ Please read our detailed [Theme Creation Guide](./docs/CREATING-THEMES.md) for s
 1. **Fork & Clone**
    Fork the repository and clone it to your local machine.
    ```bash
-   git clone https://github.com/YOUR_USERNAME/profaile.git
+   git clone https://github.com/Rishit-Thaper/profaile.git
    cd profaile
    ```
 

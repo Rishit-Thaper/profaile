@@ -1,19 +1,12 @@
 "use client";
 
 import styles from "./StepIndicator.module.css";
+import { stepIndicatorMeta } from "../constants/step-indicator";
 
 interface Step {
   key: string;
   label: string;
 }
-
-const STEP_META: Record<string, { title: string; desc: string }> = {
-  upload: { title: "Upload", desc: "Add your resume" },
-  preview: { title: "Preview", desc: "Review your data" },
-  theme: { title: "Theme", desc: "Pick a design" },
-  username: { title: "URL", desc: "Claim your link" },
-  publish: { title: "Publish", desc: "Go live" },
-};
 
 export default function StepIndicator({
   steps,
@@ -34,7 +27,7 @@ export default function StepIndicator({
     <div className={styles.card}>
       <ol className={styles.track}>
         {steps.map((step, i) => {
-          const meta = STEP_META[step.key];
+          const meta = stepIndicatorMeta[step.key];
           const isActive = step.key === currentStep;
           const isCompleted = i < currentIndex;
           const isFuture = i > currentIndex;

@@ -1,6 +1,7 @@
 import { createClient } from "@/libs/supabase/server";
+import { routes } from "@/config/routes";
 import { redirect } from "next/navigation";
-import DashboardClient from "./DashboardClient";
+import DashboardClient from "@/features/dashboard/components/DashboardClient";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -10,7 +11,7 @@ export default async function Home() {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    redirect("/login");
+    redirect(routes.login);
   }
 
   return <DashboardClient userEmail={session.user.email ?? ""} />;

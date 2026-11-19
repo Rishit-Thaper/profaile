@@ -1,6 +1,6 @@
 "use client";
 
-import { useInView } from "@/app/hooks/useInView";
+import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Experience as ExperienceType } from "@/app/types";
 
 const ACCENTS = ["#FF4D6D", "#8338EC", "#06D6A0", "#FFB703"];

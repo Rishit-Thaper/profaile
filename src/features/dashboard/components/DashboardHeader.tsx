@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/libs/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
 import styles from "./DashboardHeader.module.css";
+import { routes } from "@/config/routes";
 
 export default function DashboardHeader({
   email,
@@ -21,7 +22,6 @@ export default function DashboardHeader({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -38,7 +38,7 @@ export default function DashboardHeader({
     setMenuOpen(false);
     await supabase.auth.signOut();
     router.refresh();
-    router.push("/login");
+    router.push(routes.login);
   };
 
   const initials = email
@@ -47,8 +47,8 @@ export default function DashboardHeader({
     .toUpperCase();
 
   const navItems = [
-    { href: "/", label: "Dashboard" },
-    { href: "/edit", label: "Edit Profile" },
+    { href: routes.dashboard, label: "Dashboard" },
+    { href: routes.editProfile, label: "Edit Profile" },
   ];
 
   return (
@@ -57,7 +57,7 @@ export default function DashboardHeader({
         <div className={styles.left}>
           <button
             className={styles.logo}
-            onClick={() => router.push("/")}
+            onClick={() => router.push(routes.dashboard)}
             aria-label="Profaile home"
           >
             <span className={styles.logoMark} aria-hidden>
@@ -92,7 +92,7 @@ export default function DashboardHeader({
         <div className={styles.right}>
           {isPublished && username && (
             <a
-              href={`/p/${username}`}
+              href={routes.portfolio(username)}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.liveLink}
@@ -102,7 +102,6 @@ export default function DashboardHeader({
             </a>
           )}
 
-          {/* Avatar + Dropdown */}
           <div className={styles.avatarWrapper} ref={menuRef}>
             <button
               className={styles.avatar}
@@ -123,7 +122,7 @@ export default function DashboardHeader({
                   className={styles.dropdownItem}
                   onClick={() => {
                     setMenuOpen(false);
-                    router.push("/");
+                    router.push(routes.dashboard);
                   }}
                 >
                   <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
@@ -140,7 +139,7 @@ export default function DashboardHeader({
                   className={styles.dropdownItem}
                   onClick={() => {
                     setMenuOpen(false);
-                    router.push("/edit");
+                    router.push(routes.editProfile);
                   }}
                 >
                   <svg width="15" height="15" viewBox="0 0 15 15" fill="none">

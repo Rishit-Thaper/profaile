@@ -1,66 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import "./dashboard-theme.css";
-import ResumeUploader from "./components/ResumeUploader";
-import ThemePicker from "./components/ThemePicker";
-import UsernameInput from "./components/UsernameInput";
-import PublishButton from "./components/PublishButton";
-import DashboardHeader from "./components/DashboardHeader";
-import StepIndicator from "./components/StepIndicator";
-import ParsedDataPreview from "./components/ParsedDataPreview";
-import styles from "./dashboard.module.css";
+import "@/app/dashboard-theme.css";
+import ResumeUploader from "./ResumeUploader";
+import ThemePicker from "./ThemePicker";
+import UsernameInput from "./UsernameInput";
+import PublishButton from "./PublishButton";
+import DashboardHeader from "./DashboardHeader";
+import StepIndicator from "./StepIndicator";
+import ParsedDataPreview from "./ParsedDataPreview";
+import styles from "@/app/dashboard.module.css";
 
-import { useProfileQuery, useUpdateProfileMutation, Profile } from "@/hooks/useProfile";
-
-type Step = "upload" | "preview" | "theme" | "username" | "publish";
-
-const STEP_ORDER: Step[] = ["upload", "preview", "theme", "username", "publish"];
-const STEP_HEADINGS: Record<Step, { eyebrow: string; title: string; accent: string; desc: string }> = {
-  upload: {
-    eyebrow: "Step 1 of 5",
-    title: "Upload your resume",
-    accent: "resume",
-    desc: "Drop your PDF or DOCX — our AI will extract everything in seconds.",
-  },
-  preview: {
-    eyebrow: "Step 2 of 5",
-    title: "Here's what we extracted",
-    accent: "extracted",
-    desc: "Review the parsed data from your resume. You can always re-upload later.",
-  },
-  theme: {
-    eyebrow: "Step 3 of 5",
-    title: "Choose your theme",
-    accent: "theme",
-    desc: "Pick a design that represents you. Each theme is fully responsive.",
-  },
-  username: {
-    eyebrow: "Step 4 of 5",
-    title: "Claim your URL",
-    accent: "URL",
-    desc: "Pick a unique username for your portfolio link.",
-  },
-  publish: {
-    eyebrow: "Step 5 of 5",
-    title: "Go live",
-    accent: "live",
-    desc: "Your portfolio is ready. Hit publish to share it with the world.",
-  },
-};
-
-function deriveStep(p: Profile): Step {
-  if (!p.portfolio_data || Object.keys(p.portfolio_data).length === 0) {
-    return "upload";
-  }
-  if (!p.selected_theme) {
-    return "theme";
-  }
-  if (!p.username) {
-    return "username";
-  }
-  return "publish";
-}
+import { dashboardStepHeadings, dashboardSteps, DashboardStep } from "../constants/onboarding";
+import { deriveDashboardStep } from "../utils/onboarding";
+import { Profile } from "@/features/profile/api/profile-client";
+import { useProfileQuery } from "@/features/profile/hooks/useProfileQuery";
+import { useUpdateProfileMutation } from "@/features/profile/hooks/useUpdateProfileMutation";
 
 export default function DashboardClient({
   userEmail,
@@ -69,12 +24,12 @@ export default function DashboardClient({
 }) {
   const { data: profile, isLoading: loading } = useProfileQuery();
   const updateProfileMutation = useUpdateProfileMutation();
-  const [currentStep, setCurrentStep] = useState<Step>("upload");
+  const [currentStep, setCurrentStep] = useState<DashboardStep>("upload");
   const [initialStepApplied, setInitialStepApplied] = useState(false);
 
   if (profile && !initialStepApplied) {
     setInitialStepApplied(true);
-    setCurrentStep(deriveStep(profile));
+    setCurrentStep(deriveDashboardStep(profile));
   }
 
   async function updateProfile(updates: Partial<Profile>) {
@@ -122,13 +77,13 @@ export default function DashboardClient({
     );
   }
 
-  const steps: { key: Step; label: string }[] = STEP_ORDER.map((key) => ({
+  const steps: { key: DashboardStep; label: string }[] = dashboardSteps.map((key) => ({
     key,
-    label: STEP_HEADINGS[key].eyebrow.replace("Step ", "").replace(" of 5", ""),
+    label: dashboardStepHeadings[key].eyebrow.replace("Step ", "").replace(" of 5", ""),
   }));
 
-  const currentStepIndex = STEP_ORDER.indexOf(currentStep);
-  const meta = STEP_HEADINGS[currentStep];
+  const currentStepIndex = dashboardSteps.indexOf(currentStep);
+  const meta = dashboardStepHeadings[currentStep];
 
   return (
     <div className={styles.dashboard}>
@@ -143,9 +98,8 @@ export default function DashboardClient({
           steps={steps}
           currentStep={currentStep}
           onStepClick={(step) => {
-            const s = step as Step;
-            const targetIndex = STEP_ORDER.indexOf(s);
-            // Only allow going back to completed steps
+            const s = step as DashboardStep;
+            const targetIndex = dashboardSteps.indexOf(s);
             if (targetIndex <= currentStepIndex) {
               setCurrentStep(s);
             }
