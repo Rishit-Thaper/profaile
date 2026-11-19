@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { PortfolioData } from "@/app/types";
-import { useParseResumeMutation, useUpdateProfileMutation } from "@/hooks/useProfile";
+import { useParseResumeMutation, useUpdateProfileMutation } from "@/features/profile/api/profile";
 import styles from "./ResumeUploader.module.css";
 
 type UploadState = "idle" | "dragging" | "uploading" | "success" | "error";
@@ -43,7 +43,6 @@ export default function ResumeUploader({
       setState("uploading");
       setProgress(0);
 
-      // Simulate progress while waiting for API
       const progressInterval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 90) {
@@ -59,7 +58,6 @@ export default function ResumeUploader({
 
         clearInterval(progressInterval);
 
-        // Save to profile
         await updateProfileMutation.mutateAsync({ portfolio_data: parsedData });
 
         setProgress(100);

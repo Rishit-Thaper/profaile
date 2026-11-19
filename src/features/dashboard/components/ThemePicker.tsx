@@ -119,12 +119,10 @@ export default function ThemePicker({
             onMouseEnter={() => setHoveredId(theme.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
-            {/* Mini preview */}
             <div
               className={styles.preview}
               style={{ background: theme.preview.bg }}
             >
-              {/* Mock navbar */}
               <div className={styles.mockNav}>
                 <div
                   className={styles.mockNavDot}
@@ -152,7 +150,6 @@ export default function ThemePicker({
                 </div>
               </div>
 
-              {/* Mock hero */}
               <div className={styles.mockHero}>
                 <div
                   className={styles.mockTitle}
@@ -184,7 +181,6 @@ export default function ThemePicker({
                 </div>
               </div>
 
-              {/* Mock cards */}
               <div className={styles.mockCards}>
                 <div
                   className={styles.mockCard}
@@ -196,13 +192,11 @@ export default function ThemePicker({
                 />
               </div>
 
-              {/* Selected/hover ring */}
               {(isHovered || isSelected) && (
                 <div className={styles.previewGlow} />
               )}
             </div>
 
-            {/* Info */}
             <div className={styles.info}>
               <div className={styles.infoHeader}>
                 <h3 className={styles.name}>{theme.name}</h3>

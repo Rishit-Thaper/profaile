@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import DashboardHeader from "../components/DashboardHeader";
+import DashboardHeader from "@/features/dashboard/components/DashboardHeader";
 import { PortfolioData } from "../types";
-import { normalizeExternalUrl } from "@/libs/external-links";
-import { useProfileQuery, useUpdateProfileMutation } from "@/hooks/useProfile";
+import { normalizeExternalUrl } from "@/features/portfolio/utils/external-links";
+import { useProfileQuery, useUpdateProfileMutation } from "@/features/profile/api/profile";
 import styles from "./EditClient.module.css";
 import dashboardStyles from "../dashboard.module.css";
 import "../dashboard-theme.css";

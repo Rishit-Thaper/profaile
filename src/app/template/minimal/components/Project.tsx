@@ -1,4 +1,4 @@
-import ArrowUpRight from "@/app/components/ArrowUpright";
+import ArrowUpRight from "@/components/ui/ArrowUpright";
 import { Projects as ProjectsType } from "@/app/types";
 import Section from "./Section";
 

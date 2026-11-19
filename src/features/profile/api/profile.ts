@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PortfolioData } from "@/app/types";
+import { queryKeys } from "@/config/query-keys";
 
 export interface Profile {
   id: string;
@@ -8,8 +9,6 @@ export interface Profile {
   selected_theme: string;
   is_published: boolean;
 }
-
-// --- API Functions ---
 
 async function fetchProfile(): Promise<Profile> {
   const res = await fetch("/api/profile");
@@ -49,11 +48,9 @@ export async function checkUsername(username: string): Promise<{ available: bool
   return res.json();
 }
 
-// --- React Query Hooks ---
-
 export function useProfileQuery() {
   return useQuery({
-    queryKey: ["profile"],
+    queryKey: queryKeys.profile,
     queryFn: fetchProfile,
   });
 }
@@ -64,9 +61,7 @@ export function useUpdateProfileMutation() {
   return useMutation({
     mutationFn: updateProfile,
     onSuccess: (updatedProfile) => {
-      queryClient.setQueryData(["profile"], updatedProfile);
-      // Fallback in case we want to trigger a refetch too:
-      // queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.setQueryData(queryKeys.profile, updatedProfile);
     },
   });
 }
@@ -79,9 +74,9 @@ export function useParseResumeMutation() {
 
 export function useCheckUsernameQuery(username: string, enabled: boolean) {
   return useQuery({
-    queryKey: ["usernameCheck", username],
+    queryKey: queryKeys.usernameCheck(username),
     queryFn: () => checkUsername(username),
     enabled: enabled && username.length > 0,
-    staleTime: 1000 * 60 * 5, // cache for 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 }

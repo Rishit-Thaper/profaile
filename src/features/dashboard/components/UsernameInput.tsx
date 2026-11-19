@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useCheckUsernameQuery } from "@/hooks/useProfile";
+import { useCheckUsernameQuery } from "@/features/profile/api/profile";
 import styles from "./UsernameInput.module.css";
 
 export default function UsernameInput({

@@ -44,7 +44,6 @@ export default function PublishButton({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // fallback
       const input = document.createElement("input");
       input.value = portfolioUrl;
       document.body.appendChild(input);
@@ -58,7 +57,6 @@ export default function PublishButton({
 
   return (
     <div className={styles.wrapper}>
-      {/* Status card */}
       <div
         className={`${styles.statusCard} ${published ? styles.live : styles.draft}`}
       >
@@ -80,7 +78,6 @@ export default function PublishButton({
           </div>
         </div>
 
-        {/* URL bar */}
         {username && (
           <div className={styles.urlBar}>
             <span className={styles.urlText}>{portfolioUrl}</span>
@@ -122,12 +119,10 @@ export default function PublishButton({
           </div>
         )}
 
-        {/* Theme label */}
         <div className={styles.themeBadge}>
           Theme: <strong>{selectedTheme}</strong>
         </div>
 
-        {/* Actions */}
         <div className={styles.actions}>
           <button
             className={`${styles.publishButton} ${published ? styles.unpublishButton : ""}`}

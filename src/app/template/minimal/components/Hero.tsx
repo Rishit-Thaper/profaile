@@ -1,4 +1,4 @@
-import ArrowUpRight from "@/app/components/ArrowUpright";
+import ArrowUpRight from "@/components/ui/ArrowUpright";
 import Portrait from "../../_shared/Portrait";
 import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";

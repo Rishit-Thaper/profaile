@@ -1,7 +1,7 @@
 "use client";
 
 import { PortfolioData } from "@/app/types";
-import { normalizePortfolioExternalUrls } from "@/libs/external-links";
+import { normalizePortfolioExternalUrls } from "@/features/portfolio/utils/external-links";
 import THEMES from "@/themes";
 import PortfolioChat from "./PortfolioChat";
 
