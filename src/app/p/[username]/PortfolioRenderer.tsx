@@ -1,6 +1,7 @@
 "use client";
 
 import { PortfolioData } from "@/app/types";
+import { normalizePortfolioExternalUrls } from "@/libs/external-links";
 import THEMES from "@/themes";
 import PortfolioChat from "./PortfolioChat";
 
@@ -24,10 +25,11 @@ export default function PortfolioRenderer({
   username: string;
 }) {
   const ThemeComponent = THEMES[theme] || THEMES["minimal"];
+  const normalizedData = normalizePortfolioExternalUrls(data);
 
   return (
     <>
-      <ThemeComponent data={data} />
+      <ThemeComponent data={normalizedData} />
       <PortfolioChat
         name={data.personal_info?.name || username}
         username={username}

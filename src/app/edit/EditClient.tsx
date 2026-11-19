@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import DashboardHeader from "../components/DashboardHeader";
 import { PortfolioData } from "../types";
+import { normalizeExternalUrl } from "@/libs/external-links";
 import { useProfileQuery, useUpdateProfileMutation } from "@/hooks/useProfile";
 import styles from "./EditClient.module.css";
 import dashboardStyles from "../dashboard.module.css";
@@ -99,7 +100,16 @@ export default function EditClient({ userEmail }: { userEmail: string }) {
 
     cleanData.projects?.forEach((p) => {
       p.tech_stack = cleanArray(p.tech_stack);
+      if (p.github) p.github = normalizeExternalUrl(p.github) ?? p.github.trim();
+      if (p.live) p.live = normalizeExternalUrl(p.live) ?? p.live.trim();
     });
+
+    for (const field of SOCIAL_FIELDS) {
+      const value = cleanData.personal_info[field.key];
+      if (typeof value === "string" && value) {
+        cleanData.personal_info[field.key] = normalizeExternalUrl(value) ?? value.trim();
+      }
+    }
 
     if (cleanData.experience) cleanData.experience = cleanData.experience.filter((exp) => !isObjEmpty(exp));
     if (cleanData.projects) cleanData.projects = cleanData.projects.filter((proj) => !isObjEmpty(proj));
