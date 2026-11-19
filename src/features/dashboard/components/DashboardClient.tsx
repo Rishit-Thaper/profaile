@@ -13,7 +13,9 @@ import styles from "@/app/dashboard.module.css";
 
 import { dashboardStepHeadings, dashboardSteps, DashboardStep } from "../constants/onboarding";
 import { deriveDashboardStep } from "../utils/onboarding";
-import { Profile, useProfileQuery, useUpdateProfileMutation } from "@/features/profile/api/profile";
+import { Profile } from "@/features/profile/api/profile-client";
+import { useProfileQuery } from "@/features/profile/hooks/useProfileQuery";
+import { useUpdateProfileMutation } from "@/features/profile/hooks/useUpdateProfileMutation";
 
 export default function DashboardClient({
   userEmail,

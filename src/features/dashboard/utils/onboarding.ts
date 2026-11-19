@@ -1,4 +1,4 @@
-import { Profile } from "@/features/profile/api/profile";
+import { Profile } from "@/features/profile/api/profile-client";
 import { DashboardStep } from "../constants/onboarding";
 
 export function deriveDashboardStep(profile: Profile): DashboardStep {
