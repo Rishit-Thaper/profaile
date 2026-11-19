@@ -1,6 +1,7 @@
 import { createClient } from "@/libs/supabase/server";
+import { routes } from "@/config/routes";
 import { redirect } from "next/navigation";
-import EditClient from "./EditClient";
+import ProfileEditor from "@/features/profile/components/ProfileEditor";
 
 export default async function EditPage() {
   const supabase = await createClient();
@@ -10,8 +11,8 @@ export default async function EditPage() {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    redirect("/login");
+    redirect(routes.login);
   }
 
-  return <EditClient userEmail={session.user.email ?? ""} />;
+  return <ProfileEditor userEmail={session.user.email ?? ""} />;
 }
