@@ -27,9 +27,9 @@ jobs:
           test -n "$SUPABASE_ACCESS_TOKEN" || { echo 'Missing SUPABASE_ACCESS_TOKEN'; exit 1; }
           test -n "$SUPABASE_DB_PASSWORD" || { echo 'Missing SUPABASE_DB_PASSWORD'; exit 1; }
           test -n "$SUPABASE_PROJECT_ID" || { echo 'Missing SUPABASE_PROJECT_ID'; exit 1; }
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v3
         with:
-          version: latest
+          version: 3.3.0
       - name: Link production database
         run: supabase link "$SUPABASE_PROJECT_ID"
       - name: Record SQL Editor migrations in history
