@@ -1,5 +1,5 @@
 .surface { position: relative; min-height: 100vh; background: var(--portfolio-bg); color: var(--portfolio-text); }
-.appearanceControl { position: fixed; z-index: 90; right: 16px; bottom: 16px; display: flex; align-items: center; gap: 4px; padding: 6px; border: 1px solid color-mix(in srgb, var(--portfolio-accent) 45%, transparent); border-radius: 999px; background: var(--portfolio-surface); color: var(--portfolio-text); box-shadow: 0 8px 28px #0005; font: 600 11px/1.2 Inter, sans-serif; }
+.appearanceControl { position: fixed; z-index: 90; left: 16px; bottom: 16px; display: flex; align-items: center; gap: 4px; padding: 6px; border: 1px solid color-mix(in srgb, var(--portfolio-accent) 45%, transparent); border-radius: 999px; background: var(--portfolio-surface); color: var(--portfolio-text); box-shadow: 0 8px 28px #0005; font: 600 11px/1.2 Inter, sans-serif; }
 .appearanceControl span { padding: 0 8px; color: var(--portfolio-muted); }
 .appearanceControl button { display: inline-flex; align-items: center; gap: 5px; padding: 7px 10px; border: 0; border-radius: 999px; background: transparent; color: var(--portfolio-text); font: inherit; text-transform: capitalize; cursor: pointer; }
 .appearanceControl button[aria-pressed="true"] { background: var(--portfolio-accent); color: #0b1013; }
@@ -14,7 +14,6 @@
 .surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="bg-[#122A1C]"]),
 .surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="bg-[#091510]"]) { background-color: var(--portfolio-bg) !important; }
 .surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="text-[#F5F0E8]"]) { color: var(--portfolio-text) !important; }
-.surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="bg-[#F5F0E8]"]) { background-color: var(--portfolio-text) !important; }
 .surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="bg-[#0A0A12]"]),
 .surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="bg-[#12121D]"]),
 .surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="bg-[#0B0B14]"]) { background-color: var(--portfolio-bg) !important; }
@@ -39,7 +38,7 @@
 .surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="bg-[#EBE1FF]"]),
 .surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="bg-[#D9FBF0]"]) { background-color: var(--portfolio-surface) !important; }
 .surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="text-black"]) { color: var(--portfolio-text) !important; }
-@media (max-width: 600px) { .appearanceControl { right: 8px; bottom: 8px; } .appearanceControl span { display: none; } }
+@media (max-width: 600px) { .appearanceControl { left: 8px; bottom: 8px; } .appearanceControl span { display: none; } }
 .surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global(.bg-white),
 .surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global(.bg-white),
 .surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global(.bg-white) { background-color: var(--portfolio-surface) !important; }
@@ -47,3 +46,28 @@
 .surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global(.text-black),
 .surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global(.text-black) { color: var(--portfolio-text) !important; }
 .surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="text-black/"]) { color: var(--portfolio-muted) !important; }
+
+/* Scrolled navigation needs the same surface as the selected appearance. */
+.surface :global(nav:not(.bg-transparent)) { background-color: var(--portfolio-bg) !important; }
+
+/* These cards use inline pastel backgrounds, which otherwise outlive the dark text swap. */
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global(.portfolio-appearance-card),
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global(.portfolio-appearance-card) { background: var(--portfolio-surface) !important; }
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global([class*="bg-white/70"]) { background-color: var(--portfolio-surface) !important; }
+
+/* Neon uses white utility text throughout its dark-first template. */
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global(.text-white) { color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="text-white/"]) { color: var(--portfolio-muted) !important; }
+
+/* Bright accents that were designed for dark canvases need deeper text colors in light mode. */
+.surface[data-portfolio-theme="minimal"][data-portfolio-appearance="light"] :global([class*="text-[#7FA688]"]) { color: #41694b !important; }
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="text-[#00E5FF]"]) { color: #08758b !important; }
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="text-[#4DEEA8]"]) { color: #147d58 !important; }
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="text-[#FF2E93]"]) { color: #b01e6d !important; }
+.surface[data-portfolio-theme="terminal"][data-portfolio-appearance="light"] :global([class*="text-[#00FF9C]"]) { color: #147a50 !important; }
+.surface[data-portfolio-theme="terminal"][data-portfolio-appearance="light"] :global([class*="text-[#00B3FF]"]) { color: #14658a !important; }
+.surface[data-portfolio-theme="minimal"][data-portfolio-appearance="light"] :global(nav .opacity-30) { opacity: .8 !important; }
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global(nav a.text-black) { color: #111 !important; }
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="bg-[#06D6A0]"].text-black),
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="bg-[#FFB703]"].text-black) { color: #111 !important; }
+.surface[data-portfolio-theme="vibrant"] :global([class*="bg-[#06D6A0]"].text-white) { color: #111 !important; }

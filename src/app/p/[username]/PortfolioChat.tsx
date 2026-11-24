@@ -63,8 +63,8 @@ function withAlpha(hex: string, alpha: number): string {
   return `#${full}${a}`;
 }
 
-function buildPalette(bodyBg: string, bodyText: string, accent: string): ChatPalette {
-  const isDark = luminance(bodyBg) < 0.5;
+function buildPalette(background: string, accent: string): ChatPalette {
+  const isDark = luminance(background) < 0.5;
   const onAccent = luminance(accent) < 0.55 ? "#ffffff" : "#0b0b0b";
   const text = isDark ? "#ececec" : "#1a1a1a";
   const panel = isDark ? "#18181d" : "#ffffff";
@@ -148,11 +148,13 @@ export default function PortfolioChat({
   username,
   slug,
   accent = "#6366f1",
+  background,
 }: {
   name: string;
   username: string;
   slug?: string;
   accent?: string;
+  background: string;
 }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -162,18 +164,7 @@ export default function PortfolioChat({
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const [palette, setPalette] = useState<ChatPalette>(() =>
-    buildPalette("#ffffff", "#1a1a1a", accent),
-  );
-
-  useEffect(() => {
-    const cs = getComputedStyle(document.body);
-    const bg = cs.backgroundColor && !/rgba\(0, 0, 0, 0\)|transparent/i.test(cs.backgroundColor)
-      ? cs.backgroundColor
-      : "#ffffff";
-    const text = cs.color || "#1a1a1a";
-    setPalette(buildPalette(bg, text, accent));
-  }, [accent]);
+  const palette = useMemo(() => buildPalette(background, accent), [background, accent]);
 
   useEffect(() => {
     if (!open) return;

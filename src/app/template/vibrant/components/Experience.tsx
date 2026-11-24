@@ -36,7 +36,7 @@ export default function Experience({ data }: { data: ExperienceType[] }) {
                   <div className="flex items-start gap-4">
                     <div
                       className="w-14 h-14 rounded-xl text-white text-2xl font-extrabold flex items-center justify-center border-2 border-black -rotate-3"
-                      style={{ background: color }}
+                      style={{ background: color, color: i % ACCENTS.length >= 2 ? "#111" : "#fff" }}
                     >
                       {exp.company.charAt(0)}
                     </div>

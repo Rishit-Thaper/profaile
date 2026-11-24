@@ -46,7 +46,7 @@ export default function Skills({ data }: { data: SkillsType }) {
                   </h3>
                   <span
                     className="px-2.5 py-1 rounded-lg text-xs font-extrabold border-2 border-black"
-                    style={{ background: palette.bg, color: palette.color, fontFamily: "'Inter', sans-serif" }}
+                    style={{ background: palette.bg, color: "#111", fontFamily: "'Inter', sans-serif" }}
                   >
                     {items.length}
                   </span>
@@ -55,8 +55,8 @@ export default function Skills({ data }: { data: SkillsType }) {
                   {items.map((item) => (
                     <span
                       key={item}
-                      className="px-3 py-1.5 rounded-lg border-2 border-black text-black text-xs font-bold hover:-translate-y-0.5 hover:rotate-1 transition-transform duration-150"
-                      style={{ background: palette.bg, color: palette.color, fontFamily: "'Inter', sans-serif" }}
+                      className="px-3 py-1.5 rounded-lg border-2 border-black text-xs font-bold hover:-translate-y-0.5 hover:rotate-1 transition-transform duration-150"
+                      style={{ background: palette.bg, color: "#111", fontFamily: "'Inter', sans-serif" }}
                     >
                       {item}
                     </span>

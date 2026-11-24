@@ -52,6 +52,6 @@ export default function PortfolioRenderer({ data, theme, username, slug, showCha
       {(["light", "dark"] as const).map((mode) => <button type="button" key={mode} aria-pressed={appearance === mode} disabled={busy} onClick={() => void changeAppearance(mode)}>{mode === "light" ? <FiSun aria-hidden /> : <FiMoon aria-hidden />} {mode}</button>)}
       {message && <small role="status">{message}</small>}
     </div>
-    {showChat && <PortfolioChat name={data.personal_info?.name || username} username={username} slug={slug} accent={CHAT_ACCENTS[theme] || "#6366f1"} />}
+    {showChat && <PortfolioChat name={data.personal_info?.name || username} username={username} slug={slug} accent={CHAT_ACCENTS[theme] || "#6366f1"} background={palette.bg} />}
   </div>;
 }

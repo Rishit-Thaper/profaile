@@ -20,7 +20,7 @@ export default function Skills({ data }: { data: SkillsType }) {
 
         <div className="grid md:grid-cols-2 gap-6">
           {(Object.entries(data) as [keyof SkillsType, string[]][])
-            .filter(([_, items]) => items && items.length > 0)
+            .filter(([, items]) => items && items.length > 0)
             .map(([cat, items], catIdx) => {
               const { color, bg } = SKILL_COLORS[catIdx % SKILL_COLORS.length];
               return (
@@ -43,13 +43,13 @@ export default function Skills({ data }: { data: SkillsType }) {
                     </h3>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {items.map((item, j) => (
+                    {items.map((item) => (
                       <span
                         key={item}
                         className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 hover:scale-105 cursor-default"
                         style={{
-                          background: j % 2 === 0 ? bg : "transparent",
-                          color: color,
+                          background: bg,
+                          color: "#1A1A2E",
                           border: `1.5px solid ${color}30`,
                         }}
                       >

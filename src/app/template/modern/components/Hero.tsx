@@ -224,7 +224,7 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
             {displayStats.map((s, i) => (
               <div
                 key={i}
-                className="rounded-3xl p-6 flex flex-col gap-2 hover:scale-105 transition-transform duration-300"
+                className="portfolio-appearance-card rounded-3xl p-6 flex flex-col gap-2 hover:scale-105 transition-transform duration-300"
                 style={{ background: s.bg }}
               >
                 <span

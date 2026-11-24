@@ -154,7 +154,7 @@ export default function Hero({
             {displayStats.map((s, i) => (
               <div
                 key={i}
-                className="rounded-2xl p-6 border-2 border-black transition-transform duration-200 hover:-translate-y-1.5 hover:rotate-1"
+                className="portfolio-appearance-card rounded-2xl p-6 border-2 border-black transition-transform duration-200 hover:-translate-y-1.5 hover:rotate-1"
                 style={{
                   background: BG_PALETTE[i % BG_PALETTE.length],
                   boxShadow: "6px 6px 0 0 #000",
@@ -181,8 +181,8 @@ export default function Hero({
                   {stack.map((t, i) => (
                     <span
                       key={t}
-                      className="px-3 py-1.5 rounded-lg text-xs font-bold text-black"
-                      style={{ background: PALETTE[i % PALETTE.length], fontFamily: "'Inter', sans-serif" }}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold"
+                      style={{ background: PALETTE[i % PALETTE.length], color: i % PALETTE.length === 2 ? "#fff" : "#111", fontFamily: "'Inter', sans-serif" }}
                     >
                       {t}
                     </span>

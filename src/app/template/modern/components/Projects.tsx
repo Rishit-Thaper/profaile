@@ -50,7 +50,7 @@ export default function Projects({ data }: { data: ProjectType[] }) {
             return (
               <div
                 key={i}
-                className="rounded-3xl p-7 flex flex-col gap-4 hover:scale-[1.02] hover:shadow-xl transition-all duration-300 group"
+                className="portfolio-appearance-card rounded-3xl p-7 flex flex-col gap-4 hover:scale-[1.02] hover:shadow-xl transition-all duration-300 group"
                 style={{
                   background: pBg,
                   boxShadow: `0 4px 24px ${pColor}15`,

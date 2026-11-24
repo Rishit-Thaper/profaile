@@ -37,13 +37,13 @@ export default function Projects({ data }: { data: ProjectType[] }) {
             return (
               <div
                 key={i}
-                className="group rounded-2xl border-2 border-black p-7 flex flex-col transition-transform duration-200 hover:-translate-y-1.5"
+                className="portfolio-appearance-card group rounded-2xl border-2 border-black p-7 flex flex-col transition-transform duration-200 hover:-translate-y-1.5"
                 style={{ background: palette.bg, boxShadow: `6px 6px 0 0 ${palette.color}` }}
               >
                 <div className="flex items-start justify-between mb-5">
                   <div
                     className="w-12 h-12 rounded-xl text-white text-xl font-extrabold flex items-center justify-center border-2 border-black rotate-3 group-hover:-rotate-3 transition-transform duration-200"
-                    style={{ background: palette.color }}
+                    style={{ background: palette.color, color: i % PALETTE.length >= 2 ? "#111" : "#fff" }}
                   >
                     {p.name.charAt(0)}
                   </div>
