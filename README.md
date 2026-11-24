@@ -64,7 +64,7 @@ The [Supabase migration workflow](.github/workflows/supabase-migrations.yml) run
 
 Add these encrypted secrets to the GitHub repository's `production` environment (or as repository secrets):
 
-- `SUPABASE_ACCESS_TOKEN` — a Supabase personal access token with read access to Project Settings, API Keys, and API Key Secrets for `supabase link`.
+- `SUPABASE_ACCESS_TOKEN` — a Supabase personal access token scoped to the production project with **Read** access to Project Settings, API Keys, API Key Secrets, and Connection Pooling. The last permission lets the CLI obtain the IPv4 pooler URL used by GitHub Actions runners. Token permissions cannot be changed after creation; create a replacement token and update this GitHub secret if Connection Pooling was omitted.
 - `SUPABASE_DB_PASSWORD` — the production project's database password.
 - `SUPABASE_PROJECT_ID` — the production Supabase project reference.
 
