@@ -2,6 +2,7 @@
 
 import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";
+import { FiMapPin } from "react-icons/fi";
 import Portrait from "../../_shared/Portrait";
 import {
   IconBehance,
@@ -83,7 +84,7 @@ export default function Hero({
             >
               {data.name}
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] via-[#7C5CFC] to-[#FF2E93]">
-                {data.title}
+                {(data.headline || data.title)}
               </span>
             </h1>
 
@@ -91,7 +92,7 @@ export default function Hero({
               className="flex flex-wrap items-center gap-x-6 gap-y-2 text-white/50 text-sm mb-8 transition-all duration-700 delay-200 font-mono"
               style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
-              {data.location && <span>📍 {data.location}</span>}
+              {data.location && <span className="inline-flex items-center gap-2"><FiMapPin aria-hidden /> {data.location}</span>}
               {data.email && <span>{data.email}</span>}
             </div>
 

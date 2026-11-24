@@ -1,4 +1,5 @@
 import { PersonalInfo } from "@/app/types";
+import { FiStar } from "react-icons/fi";
 
 export default function Footer({ data }: { data: PersonalInfo }) {
   const links: { label: string; href?: string }[] = [
@@ -39,10 +40,10 @@ export default function Footer({ data }: { data: PersonalInfo }) {
         </div>
 
         <span
-          className="text-[#FAF7F0]/30 text-xs tracking-[0.2em] uppercase"
+          className="inline-flex items-center gap-1 text-[#FAF7F0]/30 text-xs tracking-[0.2em] uppercase"
           style={{ fontFamily: "'Inter', sans-serif" }}
         >
-          ✦ Built with Profaile
+          <FiStar aria-hidden /> Built with Profaile
         </span>
       </div>
     </footer>

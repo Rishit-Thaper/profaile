@@ -1,0 +1,8 @@
+import { renderPwaIcon } from "@/features/pwa/render-icon";
+
+export const size = { width: 512, height: 512 };
+export const contentType = "image/png";
+
+export default function Icon() {
+  return renderPwaIcon(512);
+}

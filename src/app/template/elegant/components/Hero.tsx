@@ -2,6 +2,7 @@
 
 import { PersonalInfo, Stat } from "@/app/types";
 import { useEffect, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import Portrait from "../../_shared/Portrait";
 
 export default function Hero({
@@ -55,7 +56,7 @@ export default function Hero({
             className="text-[#A98647] text-xs tracking-[0.3em] uppercase"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
-            {data.title}
+            {(data.headline || data.title)}
           </span>
         </div>
 
@@ -69,7 +70,7 @@ export default function Hero({
           }}
         >
           {data.name}
-          <span className="block text-[#A98647] italic">{data.title}</span>
+          <span className="block text-[#A98647] italic">{(data.headline || data.title)}</span>
         </h1>
 
         <div
@@ -99,7 +100,7 @@ export default function Hero({
             href={`mailto:${data.email}`}
             className="inline-flex items-center gap-3 px-7 py-3 bg-[#26221C] text-[#FAF7F0] text-sm tracking-wide hover:bg-[#A98647] transition-colors duration-300"
           >
-            Get in touch <span aria-hidden>→</span>
+            Get in touch <FiArrowRight aria-hidden />
           </a>
           {data.github && (
             <a

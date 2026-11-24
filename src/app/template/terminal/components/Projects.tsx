@@ -2,6 +2,7 @@
 
 import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Projects as ProjectType } from "@/app/types";
+import { FiExternalLink } from "react-icons/fi";
 
 export default function Projects({ data }: { data: ProjectType[] }) {
   const [ref, inView] = useInView();
@@ -55,9 +56,9 @@ export default function Projects({ data }: { data: ProjectType[] }) {
                         href={p.live}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-xs text-[#00FF9C] hover:bg-[#00FF9C] hover:text-black px-2.5 py-1.5 border border-[#00FF9C]/40 rounded transition-colors duration-150"
+                        className="inline-flex items-center gap-1 text-xs text-[#00FF9C] hover:bg-[#00FF9C] hover:text-black px-2.5 py-1.5 border border-[#00FF9C]/40 rounded transition-colors duration-150"
                       >
-                        ./run ↗
+                        ./run <FiExternalLink aria-hidden />
                       </a>
                     )}
                     {p.github && (

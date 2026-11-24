@@ -16,7 +16,7 @@ export default function Footer({ data }: { data: PersonalInfo }) {
           <span className="text-[#3D6B54]">:</span>
           <span className="text-[#00B3FF]">~</span>
           <span className="text-[#3D6B54]">$</span>{" "}
-          <span className="text-[#00FF9C]">echo "{data.name} · built with profaile"</span>
+          <span className="text-[#00FF9C]">echo &quot;{data.name} · built with profaile&quot;</span>
           <span className="text-[#3D6B54]">;</span>
         </div>
 

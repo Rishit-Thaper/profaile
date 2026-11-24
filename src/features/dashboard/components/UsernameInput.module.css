@@ -66,6 +66,9 @@
 }
 
 .availableText {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.8rem;
   color: var(--success);
   margin-top: 8px;

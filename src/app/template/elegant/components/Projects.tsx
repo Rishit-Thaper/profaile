@@ -2,6 +2,7 @@
 
 import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Projects as ProjectType } from "@/app/types";
+import { FiArrowUpRight } from "react-icons/fi";
 
 export default function Projects({ data }: { data: ProjectType[] }) {
   const [ref, inView] = useInView();
@@ -39,7 +40,7 @@ export default function Projects({ data }: { data: ProjectType[] }) {
                 <span className="text-[#A98647] text-xs tracking-[0.2em] uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>
                   {String(i + 1).padStart(2, "0")} / Project
                 </span>
-                <span className="text-[#6B655A] group-hover:text-[#A98647] group-hover:rotate-45 transition-all duration-300 text-lg leading-none">↗</span>
+                <FiArrowUpRight className="text-[#6B655A] group-hover:text-[#A98647] group-hover:rotate-45 transition-all duration-300 text-lg" aria-hidden />
               </div>
 
               <h3

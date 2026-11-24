@@ -3,7 +3,7 @@ import { routes } from "@/config/routes";
 import { redirect } from "next/navigation";
 import ProfileEditor from "@/features/profile/components/ProfileEditor";
 
-export default async function EditPage() {
+export default async function EditPage({ searchParams }: { searchParams: Promise<{ portfolio?: string }> }) {
   const supabase = await createClient();
 
   const {
@@ -14,5 +14,6 @@ export default async function EditPage() {
     redirect(routes.login);
   }
 
-  return <ProfileEditor userEmail={session.user.email ?? ""} />;
+  const { portfolio } = await searchParams;
+  return <ProfileEditor userEmail={session.user.email ?? ""} portfolioId={portfolio} />;
 }

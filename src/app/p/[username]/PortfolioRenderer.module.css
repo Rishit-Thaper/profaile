@@ -1,0 +1,49 @@
+.surface { position: relative; min-height: 100vh; background: var(--portfolio-bg); color: var(--portfolio-text); }
+.appearanceControl { position: fixed; z-index: 90; right: 16px; bottom: 16px; display: flex; align-items: center; gap: 4px; padding: 6px; border: 1px solid color-mix(in srgb, var(--portfolio-accent) 45%, transparent); border-radius: 999px; background: var(--portfolio-surface); color: var(--portfolio-text); box-shadow: 0 8px 28px #0005; font: 600 11px/1.2 Inter, sans-serif; }
+.appearanceControl span { padding: 0 8px; color: var(--portfolio-muted); }
+.appearanceControl button { display: inline-flex; align-items: center; gap: 5px; padding: 7px 10px; border: 0; border-radius: 999px; background: transparent; color: var(--portfolio-text); font: inherit; text-transform: capitalize; cursor: pointer; }
+.appearanceControl button[aria-pressed="true"] { background: var(--portfolio-accent); color: #0b1013; }
+.appearanceControl button:disabled { opacity: .5; cursor: wait; }
+.appearanceControl small { position: absolute; right: 4px; bottom: calc(100% + 5px); white-space: nowrap; padding: 5px 8px; border-radius: 6px; background: var(--portfolio-surface); color: var(--portfolio-text); }
+/* Keep each theme's accent while translating its main surfaces and neutral text. */
+.surface[data-portfolio-theme="minimal"][data-portfolio-appearance="light"] :global([class*="bg-[#0E0E0E]"]),
+.surface[data-portfolio-theme="minimal"][data-portfolio-appearance="light"] :global([class*="bg-[#141414]"]) { background-color: var(--portfolio-bg) !important; }
+.surface[data-portfolio-theme="minimal"][data-portfolio-appearance="light"] :global([class*="text-[#E8E4DC]"]) { color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="minimal"][data-portfolio-appearance="light"] :global([class*="bg-[#E8E4DC]"]) { background-color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="bg-[#0D1F16]"]),
+.surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="bg-[#122A1C]"]),
+.surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="bg-[#091510]"]) { background-color: var(--portfolio-bg) !important; }
+.surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="text-[#F5F0E8]"]) { color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="professional"][data-portfolio-appearance="light"] :global([class*="bg-[#F5F0E8]"]) { background-color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="bg-[#0A0A12]"]),
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="bg-[#12121D]"]),
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="bg-[#0B0B14]"]) { background-color: var(--portfolio-bg) !important; }
+.surface[data-portfolio-theme="neon"][data-portfolio-appearance="light"] :global([class*="text-[#EAF6FF]"]) { color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="terminal"][data-portfolio-appearance="light"] :global([class*="bg-[#0D0D0D]"]),
+.surface[data-portfolio-theme="terminal"][data-portfolio-appearance="light"] :global([class*="bg-[#0B0B0B]"]),
+.surface[data-portfolio-theme="terminal"][data-portfolio-appearance="light"] :global([class*="bg-[#111111]"]),
+.surface[data-portfolio-theme="terminal"][data-portfolio-appearance="light"] :global([class*="bg-[#161616]"]) { background-color: var(--portfolio-bg) !important; }
+.surface[data-portfolio-theme="terminal"][data-portfolio-appearance="light"] :global([class*="text-[#D4FFEA]"]) { color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="terminal"][data-portfolio-appearance="light"] :global([class*="text-[#3D6B54]"]) { color: var(--portfolio-muted) !important; }
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global([class*="bg-[#FFFBF5]"]),
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global([class*="bg-[#EDFCFA]"]),
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global([class*="bg-[#F7F3FF]"]),
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global([class*="bg-[#FFF0F0]"]) { background-color: var(--portfolio-bg) !important; }
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global([class*="text-[#1A1A2E]"]) { color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global([class*="bg-[#FAF7F0]"]),
+.surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global([class*="bg-[#F4EFE4]"]) { background-color: var(--portfolio-bg) !important; }
+.surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global([class*="text-[#26221C]"]),
+.surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global([class*="text-[#4A443B]"]) { color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global([class*="text-[#6B655A]"]) { color: var(--portfolio-muted) !important; }
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="bg-[#FFF3D6]"]),
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="bg-[#EBE1FF]"]),
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="bg-[#D9FBF0]"]) { background-color: var(--portfolio-surface) !important; }
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="text-black"]) { color: var(--portfolio-text) !important; }
+@media (max-width: 600px) { .appearanceControl { right: 8px; bottom: 8px; } .appearanceControl span { display: none; } }
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global(.bg-white),
+.surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global(.bg-white),
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global(.bg-white) { background-color: var(--portfolio-surface) !important; }
+.surface[data-portfolio-theme="modern"][data-portfolio-appearance="dark"] :global(.text-black),
+.surface[data-portfolio-theme="elegant"][data-portfolio-appearance="dark"] :global(.text-black),
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global(.text-black) { color: var(--portfolio-text) !important; }
+.surface[data-portfolio-theme="vibrant"][data-portfolio-appearance="dark"] :global([class*="text-black/"]) { color: var(--portfolio-muted) !important; }

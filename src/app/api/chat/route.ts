@@ -2,10 +2,10 @@ export const runtime = "nodejs";
 
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
-import { PortfolioData } from "@/app/types";
 import { getUsernameValidationError } from "@/features/profile/utils/username";
 import { retrieveRelevantChunks } from "@/libs/rag";
-import { createClient } from "@/libs/supabase/server";
+import { getPortfolioSlugValidationError } from "@/features/portfolio/utils/slug";
+import { getPublicPortfolio } from "@/features/portfolio/server/public-portfolio";
 
 const ai = new GoogleGenAI({
   apiKey: process.env.NEXT_GEMINI_API_KEY!,
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let body: { username?: unknown; message?: unknown; history?: unknown };
+    let body: { username?: unknown; slug?: unknown; message?: unknown; history?: unknown };
     try {
       body = await req.json();
     } catch {
@@ -91,6 +91,10 @@ export async function POST(req: NextRequest) {
     const { username, message } = body;
     if (typeof username !== "string" || getUsernameValidationError(username)) {
       return NextResponse.json({ error: "Invalid username" }, { status: 400 });
+    }
+    const slug = body.slug === undefined ? "portfolio" : body.slug;
+    if (typeof slug !== "string" || getPortfolioSlugValidationError(slug)) {
+      return NextResponse.json({ error: "Invalid portfolio URL" }, { status: 400 });
     }
     if (typeof message !== "string" || message.trim().length === 0) {
       return NextResponse.json({ error: "Message cannot be empty" }, { status: 400 });
@@ -121,23 +125,13 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Load the published profile (source of truth for grounding)
-    const supabase = await createClient();
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("portfolio_data, selected_theme")
-      .eq("username", username)
-      .eq("is_published", true)
-      .maybeSingle();
-
-    if (!profile?.portfolio_data) {
-      return NextResponse.json(
-        { error: "Portfolio not found or not published" },
-        { status: 404 },
-      );
+    // Load the selected published portfolio version (source of truth for grounding).
+    const published = await getPublicPortfolio(username, slug);
+    if (!published) {
+      return NextResponse.json({ error: "Portfolio not found or not published" }, { status: 404 });
     }
 
-    const portfolio = profile.portfolio_data as PortfolioData;
+    const portfolio = published.version.data;
     const ownerName = portfolio.personal_info?.name?.trim() || username;
 
     const { context } = retrieveRelevantChunks(portfolio, message);

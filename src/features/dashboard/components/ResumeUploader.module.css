@@ -150,6 +150,44 @@
   color: var(--success);
 }
 
+.successSubtext {
+  margin: 0;
+  max-width: 390px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.successActions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.useOnceButton, .saveResumeButton {
+  border-radius: var(--radius-full);
+  padding: 8px 14px;
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.useOnceButton {
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.saveResumeButton {
+  border: 1px solid var(--accent-primary);
+  background: var(--accent-primary);
+  color: white;
+}
+
+.useOnceButton:disabled, .saveResumeButton:disabled { opacity: .6; cursor: wait; }
+
 /* ─── Error State ─── */
 .error {
   cursor: default;

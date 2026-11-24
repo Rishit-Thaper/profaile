@@ -1,10 +1,11 @@
 import { PortfolioData } from "@/app/types";
 
-export type StringPersonalField = Exclude<keyof PortfolioData["personal_info"], "photo_visible">;
+export type StringPersonalField = Exclude<keyof PortfolioData["personal_info"], "photo_visible" | "appearance">;
 
 export const personalFields: { key: StringPersonalField; label: string; placeholder?: string }[] = [
   { key: "name", label: "Full Name", placeholder: "Jane Doe" },
   { key: "title", label: "Title", placeholder: "Software Engineer" },
+  { key: "headline", label: "Card and portfolio headline", placeholder: "Building thoughtful products with code" },
   { key: "email", label: "Email", placeholder: "jane@example.com" },
   { key: "phone", label: "Phone", placeholder: "+1 555 000 0000" },
   { key: "location", label: "Location", placeholder: "San Francisco, CA" },

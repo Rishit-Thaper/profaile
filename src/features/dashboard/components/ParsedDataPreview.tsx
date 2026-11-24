@@ -1,6 +1,7 @@
 "use client";
 
 import { PortfolioData } from "@/app/types";
+import { FiBookOpen, FiBriefcase, FiGrid, FiTool, FiUser } from "react-icons/fi";
 import styles from "./ParsedDataPreview.module.css";
 
 export default function ParsedDataPreview({
@@ -11,7 +12,7 @@ export default function ParsedDataPreview({
   const sections = [
     {
       title: "Personal Info",
-      icon: "👤",
+      icon: <FiUser aria-hidden />,
       items: [
         { label: "Name", value: data.personal_info?.name },
         { label: "Title", value: data.personal_info?.title },
@@ -21,7 +22,7 @@ export default function ParsedDataPreview({
     },
     {
       title: "Skills",
-      icon: "🛠",
+      icon: <FiTool aria-hidden />,
       items: [
         {
           label: "Languages",
@@ -40,7 +41,7 @@ export default function ParsedDataPreview({
     },
     {
       title: "Experience",
-      icon: "💼",
+      icon: <FiBriefcase aria-hidden />,
       items: data.experience?.map((exp) => ({
         label: exp.role,
         value: `${exp.company}${exp.duration ? ` • ${exp.duration}` : ""}`,
@@ -48,7 +49,7 @@ export default function ParsedDataPreview({
     },
     {
       title: "Projects",
-      icon: "🚀",
+      icon: <FiGrid aria-hidden />,
       items: data.projects?.map((proj) => ({
         label: proj.name,
         value: proj.tech_stack?.join(", ") || proj.description?.slice(0, 60),
@@ -56,7 +57,7 @@ export default function ParsedDataPreview({
     },
     {
       title: "Education",
-      icon: "🎓",
+      icon: <FiBookOpen aria-hidden />,
       items: data.education?.map((edu) => ({
         label: edu.degree,
         value: `${edu.institution}${edu.duration ? ` • ${edu.duration}` : ""}`,

@@ -18,11 +18,12 @@ export async function GET(req: NextRequest) {
 
   const supabase = await createClient();
 
-  const { data } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("username", username)
-    .maybeSingle();
+  const { data: available, error } = await supabase.rpc("is_username_available", {
+    candidate: username,
+  });
+  if (error) {
+    return NextResponse.json({ available: false, error: "Could not check username" }, { status: 500 });
+  }
 
-  return NextResponse.json({ available: !data });
+  return NextResponse.json({ available });
 }

@@ -1,0 +1,15 @@
+.editor { display: grid; gap: 22px; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
+.header h3 { margin: 0 0 6px; color: var(--text-primary); font: 700 1.3rem var(--font-display); }
+.header p { margin: 0; color: var(--text-secondary); font-size: .82rem; }
+.header button { flex: none; border: 1px solid var(--border-default); border-radius: var(--radius-full); padding: 8px 13px; background: transparent; color: var(--text-secondary); font: 600 .77rem var(--font-sans); cursor: pointer; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid var(--border-default); }
+.tabs button { border: 0; border-bottom: 2px solid transparent; padding: 10px 13px; background: transparent; color: var(--text-secondary); font: 600 .78rem var(--font-sans); cursor: pointer; }
+.tabs .active { border-color: var(--accent-primary); color: var(--text-primary); }
+.fields { padding: 2px 0 12px; }
+.actions { display: flex; align-items: center; justify-content: flex-end; gap: 16px; border-top: 1px solid var(--border-subtle); padding-top: 18px; }
+.actions span { color: var(--text-tertiary); font-size: .78rem; }
+.actions p { margin: 0 auto 0 0; color: var(--error); font-size: .78rem; }
+.actions button { border: 0; border-radius: var(--radius-full); padding: 10px 18px; background: var(--accent-primary); color: #fff; font: 600 .82rem var(--font-sans); cursor: pointer; }
+.actions button:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 600px) { .header { flex-direction: column; } .tabs { overflow-x: auto; flex-wrap: nowrap; } .actions { flex-wrap: wrap; } }

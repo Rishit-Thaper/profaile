@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { FiCheckCircle } from "react-icons/fi";
 import { useCheckUsernameQuery } from "@/features/profile/hooks/useCheckUsernameQuery";
 import { usernamePattern } from "@/features/profile/utils/username";
 import styles from "./UsernameInput.module.css";
@@ -100,7 +101,7 @@ export default function UsernameInput({
   return (
     <div className={styles.wrapper}>
       <div className={styles.inputGroup}>
-        <span className={styles.prefix}>{baseUrl}/p/</span>
+        <span className={styles.prefix}>{baseUrl}/u/</span>
         <input
           type="text"
           value={value}
@@ -144,7 +145,7 @@ export default function UsernameInput({
 
       {status === "available" && (
         <p className={styles.availableText}>
-          ✨ This username is available!
+          <FiCheckCircle aria-hidden /> This username is available!
         </p>
       )}
 

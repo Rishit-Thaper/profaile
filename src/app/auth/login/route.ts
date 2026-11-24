@@ -14,5 +14,5 @@ export async function GET(request: Request) {
     return redirect("/auth/auth-code-error");
   }
 
-  return redirect(data.url); // 👈 redirects user to Google's OAuth page
+  return redirect(data.url);
 }

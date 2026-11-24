@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FiArrowRight } from "react-icons/fi";
 import DashboardHeader from "@/features/dashboard/components/DashboardHeader";
 import { PortfolioData } from "@/app/types";
 import { routes } from "@/config/routes";
 import { useProfileQuery } from "@/features/profile/hooks/useProfileQuery";
-import { useUpdateProfileMutation } from "@/features/profile/hooks/useUpdateProfileMutation";
+import { usePortfolioMutations, usePortfoliosQuery } from "@/features/portfolio/hooks/usePortfolioQueries";
 import { prepareProfileDataForSave } from "../utils/profile-editor";
 import PersonalInfoSection from "./editor/PersonalInfoSection";
 import SkillsSection from "./editor/SkillsSection";
@@ -20,23 +21,26 @@ import "@/app/dashboard-theme.css";
 
 type TabKey = "Personal" | "Skills" | "Experience" | "Projects" | "Education" | "Other";
 
-export default function ProfileEditor({ userEmail }: { userEmail: string }) {
+export default function ProfileEditor({ userEmail, portfolioId }: { userEmail: string; portfolioId?: string }) {
   const router = useRouter();
   const [data, setData] = useState<PortfolioData | null>(null);
   const { data: profileMeta, isLoading: loading } = useProfileQuery();
-  const updateProfileMutation = useUpdateProfileMutation();
+  const { data: portfolios = [], isLoading: portfoliosLoading } = usePortfoliosQuery();
+  const portfolioMutations = usePortfolioMutations();
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("Personal");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [uploading, setUploading] = useState(false);
   const savedSnapshot = useRef<string | null>(null);
+  const selectedPortfolio = portfolios.find((portfolio) => portfolio.id === portfolioId) ?? portfolios[0] ?? null;
+  const selectedPortfolioData = selectedPortfolio?.draft_data;
 
   useEffect(() => {
-    if (profileMeta?.portfolio_data && !data) {
-      setData(profileMeta.portfolio_data);
-      savedSnapshot.current = JSON.stringify(profileMeta.portfolio_data);
+    if (selectedPortfolioData) {
+      setData(selectedPortfolioData);
+      savedSnapshot.current = JSON.stringify(selectedPortfolioData);
     }
-  }, [profileMeta, data]);
+  }, [selectedPortfolio?.id, selectedPortfolioData]);
 
   const dirty = useMemo(
     () => data !== null && savedSnapshot.current !== null && JSON.stringify(data) !== savedSnapshot.current,
@@ -57,7 +61,12 @@ export default function ProfileEditor({ userEmail }: { userEmail: string }) {
     setData(cleanData);
 
     try {
-      await updateProfileMutation.mutateAsync({ portfolio_data: cleanData });
+      if (!selectedPortfolio) return;
+      await portfolioMutations.saveDraft.mutateAsync({
+        id: selectedPortfolio.id,
+        data: cleanData,
+        theme: selectedPortfolio.draft_theme,
+      });
       savedSnapshot.current = JSON.stringify(cleanData);
       showToast("Profile updated successfully!", "success");
     } catch {
@@ -124,7 +133,7 @@ export default function ProfileEditor({ userEmail }: { userEmail: string }) {
     );
   };
 
-  if (loading) {
+  if (loading || portfoliosLoading) {
     return (
       <div className={dashboardStyles.loadingScreen}>
         <div className={dashboardStyles.loadingMark} aria-hidden>
@@ -138,14 +147,14 @@ export default function ProfileEditor({ userEmail }: { userEmail: string }) {
     );
   }
 
-  if (!data) {
+  if (!data?.personal_info) {
     return (
       <div className={styles.empty}>
         <div className={styles.emptyCard}>
           <h2 className={styles.emptyTitle}>No portfolio data found</h2>
           <p className={styles.emptyDesc}>Upload a resume first to start editing your portfolio.</p>
           <button className={dashboardStyles.primaryButton} onClick={() => router.push(routes.dashboard)}>
-            Go to dashboard →
+            Go to dashboard <FiArrowRight aria-hidden />
           </button>
         </div>
       </div>
@@ -245,8 +254,10 @@ export default function ProfileEditor({ userEmail }: { userEmail: string }) {
 
       <DashboardHeader
         email={userEmail}
-        isPublished={profileMeta?.is_published ?? false}
+        isPublished={Boolean(selectedPortfolio?.published_version_id)}
         username={profileMeta?.username ?? null}
+        portfolioSlug={selectedPortfolio?.slug}
+        editProfileHref={selectedPortfolio ? routes.editProfileForPortfolio(selectedPortfolio.id) : routes.editProfile}
       />
 
       <main className={styles.main}>
@@ -259,7 +270,7 @@ export default function ProfileEditor({ userEmail }: { userEmail: string }) {
             </button>
             <div>
               <h1 className={styles.title}>Edit Profile</h1>
-              <p className={styles.subtitle}>Fine-tune everything your visitors will see.</p>
+              <p className={styles.subtitle}>Editing {selectedPortfolio?.name ?? "your portfolio"} draft.</p>
             </div>
           </div>
         </div>

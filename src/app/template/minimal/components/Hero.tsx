@@ -49,7 +49,7 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
           className={`flex flex-wrap items-baseline justify-between gap-4 mb-16 transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
         >
           <p className="font-serif italic text-[#E8E4DC]/40 text-2xl">
-            {data.title}
+            {(data.headline || data.title)}
           </p>
           <p className="font-mono text-xs text-[#E8E4DC]/20 tracking-wider">
             {data.location}

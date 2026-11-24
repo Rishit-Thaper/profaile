@@ -111,7 +111,7 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
               </div>
               <h1 className="font-display leading-[0.95] mb-6">
                 <span className="block text-[#F5F0E8]/30 text-2xl tracking-[0.3em] uppercase mb-4">
-                  {data.title}
+                  {(data.headline || data.title)}
                 </span>
                 <span
                   className="block text-[4rem] sm:text-7xl md:text-[8rem] lg:text-[10rem] text-[#F5F0E8] font-bold break-words leading-none"

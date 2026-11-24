@@ -1,4 +1,5 @@
 import { PersonalInfo } from "@/app/types";
+import { FiStar } from "react-icons/fi";
 import {
   IconBehance,
   IconDribbble,
@@ -54,8 +55,8 @@ export default function Footer({ data }: { data: PersonalInfo }) {
           })}
         </div>
 
-        <span className="text-white/20 text-xs font-medium tracking-wider uppercase">
-          Built with profAIle ✦
+        <span className="inline-flex items-center gap-1 text-white/20 text-xs font-medium tracking-wider uppercase">
+          Built with profAIle <FiStar aria-hidden />
         </span>
       </div>
     </footer>

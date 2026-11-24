@@ -100,6 +100,7 @@ export default function ThemePicker({
   const [selected, setSelected] = useState(currentTheme);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
+
   const handleSelect = (themeId: string) => {
     setSelected(themeId);
     onSelect(themeId);

@@ -86,7 +86,7 @@ export default function Hero({
             </h1>
 
             <p className="text-black/60 text-xl leading-relaxed mb-8 max-w-md transition-all duration-500 delay-200" style={{ fontFamily: "'Inter', sans-serif" }}>
-              {data.title}
+              {(data.headline || data.title)}
             </p>
 
             <div
