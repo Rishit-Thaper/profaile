@@ -11,10 +11,16 @@ export default function DashboardHeader({
   email,
   isPublished,
   username,
+  portfolioSlug,
+  onTakeTour,
+  editProfileHref = routes.editProfile,
 }: {
   email: string;
   isPublished: boolean;
   username: string | null;
+  portfolioSlug?: string;
+  onTakeTour?: () => void;
+  editProfileHref?: string;
 }) {
   const supabase = createClient();
   const router = useRouter();
@@ -47,8 +53,8 @@ export default function DashboardHeader({
     .toUpperCase();
 
   const navItems = [
-    { href: routes.dashboard, label: "Dashboard" },
-    { href: routes.editProfile, label: "Edit Profile" },
+    { href: routes.dashboard, activePath: routes.dashboard, label: "Dashboard" },
+    { href: editProfileHref, activePath: routes.editProfile, label: "Edit Profile" },
   ];
 
   return (
@@ -58,7 +64,7 @@ export default function DashboardHeader({
           <button
             className={styles.logo}
             onClick={() => router.push(routes.dashboard)}
-            aria-label="Profaile home"
+            aria-label="Profaile dashboard"
           >
             <span className={styles.logoMark} aria-hidden>
               <Image
@@ -75,7 +81,7 @@ export default function DashboardHeader({
 
           <nav className={styles.nav} aria-label="Primary">
             {navItems.map((item) => {
-              const active = pathname === item.href;
+              const active = pathname === item.activePath;
               return (
                 <button
                   key={item.href}
@@ -92,7 +98,7 @@ export default function DashboardHeader({
         <div className={styles.right}>
           {isPublished && username && (
             <a
-              href={routes.portfolio(username)}
+              href={portfolioSlug ? routes.portfolioBySlug(username, portfolioSlug) : routes.portfolio(username)}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.liveLink}
@@ -139,7 +145,7 @@ export default function DashboardHeader({
                   className={styles.dropdownItem}
                   onClick={() => {
                     setMenuOpen(false);
-                    router.push(routes.editProfile);
+                    router.push(editProfileHref);
                   }}
                 >
                   <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
@@ -153,6 +159,21 @@ export default function DashboardHeader({
                   </svg>
                   Edit Profile
                 </button>
+                {onTakeTour && (
+                  <button
+                    className={styles.dropdownItem}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      onTakeTour();
+                    }}
+                  >
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.3" />
+                      <path d="M6.5 6a1.5 1.5 0 1 1 2.35 1.24C8.25 7.7 8 8 8 8.75M8 11.25h.01" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                    </svg>
+                    Take a tour
+                  </button>
+                )}
                 <div className={styles.dropdownDivider} />
                 <button
                   className={`${styles.dropdownItem} ${styles.dropdownLogout}`}

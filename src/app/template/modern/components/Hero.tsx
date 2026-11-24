@@ -145,7 +145,7 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
                 letterSpacing: "-0.03em",
               }}
             >
-              Hi, I'm{" "}
+              Hi, I&apos;m{" "}
               <span className="relative inline-block">
                 <span className="relative z-10">{data.name}</span>
                 <span
@@ -153,14 +153,12 @@ export default function Hero({ data, stats, core_stack }: { data: PersonalInfo; 
                   style={{ background: "#FF6B6B" }}
                 />
               </span>{" "}
-              👋
             </h1>
 
             <p
               className={`text-[#1A1A2E]/60 text-xl leading-relaxed mb-8 transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             >
-              {data.title} — building fast, beautiful, and accessible web
-              experiences.
+              {data.headline || data.title}
             </p>
 
             <div

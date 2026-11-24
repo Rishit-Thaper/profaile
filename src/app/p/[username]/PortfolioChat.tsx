@@ -146,10 +146,12 @@ function uid(): string {
 export default function PortfolioChat({
   name,
   username,
+  slug,
   accent = "#6366f1",
 }: {
   name: string;
   username: string;
+  slug?: string;
   accent?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -210,7 +212,7 @@ export default function PortfolioChat({
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, message: content, history }),
+        body: JSON.stringify({ username, slug, message: content, history }),
       });
       const data = await res.json();
       if (!res.ok) {

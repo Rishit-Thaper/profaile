@@ -3,6 +3,7 @@
 import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Education as EducationType } from "@/app/types";
 import SectionHeader from "./SectionHeader";
+import { FiBookOpen } from "react-icons/fi";
 
 export default function Education({ data }: { data: EducationType[] }) {
   const [ref, inView] = useInView();
@@ -26,7 +27,7 @@ export default function Education({ data }: { data: EducationType[] }) {
               boxShadow: "0 8px 24px rgba(38,198,176,0.35)",
             }}
           >
-            🎓
+            <FiBookOpen aria-hidden />
           </div>
           <div className="flex-1">
             <h3 className="font-display text-3xl text-[#1A1A2E] font-bold mb-1">

@@ -20,7 +20,8 @@ Rules:
 - If any field is missing, return empty string or empty array.
 - For the 'gpa' field, extract ONLY the numeric value (e.g., '8.5' or '3.8', NOT '8.5/10 Aggregate CGPA').
 - Analyze the resume and generate a \`stats\` array containing 4 impressive metrics (e.g., Years of Experience, Number of Projects, Performance Gain, CGPA).
-- Analyze the resume and generate a \`core_stack\` array containing 3-5 impressive technical skills(e.g., React, Node.js, Python, SQL, Figma, etc.)`;
+- Analyze the resume and generate a \`core_stack\` array containing 3-5 impressive technical skills(e.g., React, Node.js, Python, SQL, Figma, etc.).
+- Generate \`personal_info.headline\` as one warm, personality-centered phrase of 5-9 words. Express how the person approaches work or the experience they create, grounded in the resume. Do not list a job title, skills, technologies, metrics, or achievements. Do not use a colon, comma, slash, or ending punctuation. Do not invent traits or facts.`;
 
 const RESPONSE_SCHEMA = {
   type: "OBJECT",
@@ -34,6 +35,7 @@ const RESPONSE_SCHEMA = {
       properties: {
         name: { type: "STRING" },
         title: { type: "STRING" },
+        headline: { type: "STRING" },
         email: { type: "STRING" },
         phone: { type: "STRING" },
         github: { type: "STRING" },
@@ -220,6 +222,14 @@ export async function parseResumeFile(file: File | null) {
   const parsedResume = await parseResumeWithAI(resumeText);
   if (parsedResume.is_resume === false) {
     throw new Error("The uploaded file does not appear to be a valid resume or CV.");
+  }
+
+  const personalInfo = parsedResume.personal_info as Record<string, unknown> | undefined;
+  const headline = typeof personalInfo?.headline === "string" ? personalInfo.headline.trim() : "";
+  const wordCount = headline.split(/\s+/).filter(Boolean).length;
+  if (personalInfo && (wordCount < 5 || wordCount > 9 || /[:,;/]|-$|\b(engineer|developer|full-stack|react|next\.js)\b/i.test(headline))) {
+    // The dashboard generates a focused headline when resume parsing returns a list or role label.
+    personalInfo.headline = "";
   }
 
   return {

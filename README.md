@@ -58,6 +58,22 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the application running.
 
+## Production database migrations
+
+The [Supabase migration workflow](.github/workflows/supabase-migrations.yml) runs after Vercel reports a successful **production** deployment of `main` to `profaile.app`. It checks out that exact deployed commit, previews pending migrations, and applies them to the linked Supabase project. Preview deployments and failed production deployments do not run migrations.
+
+Add these encrypted secrets to the GitHub repository's `production` environment (or as repository secrets):
+
+- `SUPABASE_ACCESS_TOKEN` — a Supabase personal access token with read access to Project Settings, API Keys, and API Key Secrets for `supabase link`.
+- `SUPABASE_DB_PASSWORD` — the production project's database password.
+- `SUPABASE_PROJECT_ID` — the production Supabase project reference.
+
+Keep Vercel's GitHub `repository_dispatch` deployment events enabled. The workflow never caches private drafts or runs database changes during pull request builds.
+
+**One-time setup for this existing database:** migrations 001–005 were run through the Supabase SQL Editor, which does not add rows to `supabase_migrations.schema_migrations`. Confirm all five changes are present in production, then run the [Record existing Supabase migrations](.github/workflows/supabase-baseline.yml) action once and enter its requested confirmation text. This action records their new CLI versions `20261124000101` through `20261124000105`; it does not execute their SQL. The automatic workflow stops if these historical migrations still appear pending. After the one-time setup, it applies future migrations automatically. If the first deployment's migration job stopped before the baseline was recorded, redeploy the same commit to trigger it again; migration `20261124000106` will then run after the compatible app is live.
+
+Use `supabase migration new <name>` for future migrations so filenames have the CLI's timestamp format. Do not apply new production schema changes through the SQL Editor, because that bypasses migration history.
+
 ## 🤝 Contributing
 
 We love contributions! Profaile is designed to be highly extensible, especially when it comes to portfolio themes.

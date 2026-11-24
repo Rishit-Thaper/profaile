@@ -1,6 +1,8 @@
 export interface PersonalInfo {
   name: string;
   title: string;
+  headline?: string;
+  appearance?: "dark" | "light";
   email: string;
   location: string;
   phone: string;
@@ -77,4 +79,36 @@ export interface PortfolioData {
   stats?: Stat[];
 
   core_stack?: string[];
+}
+
+export interface PortfolioVersion {
+  id: string;
+  portfolio_id: string;
+  version_number: number;
+  label: string | null;
+  data: PortfolioData;
+  theme: string;
+  source_resume_version_id: string | null;
+  created_at: string;
+}
+
+export interface CareerPortfolio {
+  id: string;
+  user_id: string;
+  slug: string;
+  name: string;
+  draft_data: PortfolioData | null;
+  draft_theme: string;
+  published_version_id: string | null;
+  published_version?: PortfolioVersion | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ResumeVersion {
+  id: string;
+  original_filename: string;
+  mime_type: string;
+  parsed_data: PortfolioData;
+  created_at: string;
 }

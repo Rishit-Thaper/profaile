@@ -1,4 +1,5 @@
 import { PersonalInfo } from "@/app/types";
+import { FiStar } from "react-icons/fi";
 import {
   IconBehance,
   IconDribbble,
@@ -60,8 +61,8 @@ export default function Footer({ data }: { data: PersonalInfo }) {
             <IconMail />
           </a>
         </div>
-        <p className="text-[#F5F0E8]/15 text-xs tracking-wider">
-          Built with profAIle ✦
+        <p className="inline-flex items-center gap-1 text-[#F5F0E8]/15 text-xs tracking-wider">
+          Built with profAIle <FiStar aria-hidden />
         </p>
       </div>
     </footer>

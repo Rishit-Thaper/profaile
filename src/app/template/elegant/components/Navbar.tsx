@@ -2,6 +2,7 @@
 
 import { PortfolioData } from "@/app/types";
 import { useEffect, useState } from "react";
+import { FiStar } from "react-icons/fi";
 
 const NAV = ["experience", "projects", "skills", "education"];
 
@@ -28,7 +29,7 @@ export default function Navbar({ data }: { data: PortfolioData }) {
           >
             {data.personal_info.name}
           </span>
-          <span className="text-[#A98647] group-hover:rotate-90 transition-transform duration-300 text-lg leading-none">✦</span>
+          <span className="text-[#A98647] group-hover:rotate-90 transition-transform duration-300 text-lg leading-none"><FiStar aria-hidden /></span>
         </a>
 
         <div className="hidden md:flex items-center gap-8">

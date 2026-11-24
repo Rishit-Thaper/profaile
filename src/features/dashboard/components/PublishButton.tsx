@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FiExternalLink, FiUploadCloud } from "react-icons/fi";
 import styles from "./PublishButton.module.css";
 
 export default function PublishButton({
@@ -134,7 +135,7 @@ export default function PublishButton({
             ) : published ? (
               "Unpublish"
             ) : (
-              "🚀 Publish now"
+              <><FiUploadCloud aria-hidden /> Publish now</>
             )}
           </button>
 
@@ -145,7 +146,7 @@ export default function PublishButton({
               rel="noopener noreferrer"
               className={styles.viewButton}
             >
-              View portfolio ↗
+              View portfolio <FiExternalLink aria-hidden />
             </a>
           )}
         </div>

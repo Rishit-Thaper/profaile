@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FiArrowRight } from "react-icons/fi";
 
 export default function NotFound() {
   return (
@@ -44,6 +45,8 @@ export default function NotFound() {
         href="/"
         style={{
           display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
           padding: "12px 28px",
           background: "#3b82f6",
           color: "#fff",
@@ -54,7 +57,7 @@ export default function NotFound() {
           transition: "transform 0.2s, box-shadow 0.2s",
         }}
       >
-        Create your portfolio →
+        Create your portfolio <FiArrowRight aria-hidden />
       </Link>
     </div>
   );

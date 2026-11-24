@@ -24,7 +24,7 @@ export default function Hero({
 
   const lines = [
     { cmd: "whoami", out: data.name },
-    { cmd: "role", out: data.title },
+    { cmd: "role", out: (data.headline || data.title) },
   ];
 
   return (

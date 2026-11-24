@@ -2,6 +2,7 @@
 
 import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Experience as ExperienceType } from "@/app/types";
+import { FiArrowRight } from "react-icons/fi";
 
 const ACCENTS = ["#FF4D6D", "#8338EC", "#06D6A0", "#FFB703"];
 
@@ -63,7 +64,7 @@ export default function Experience({ data }: { data: ExperienceType[] }) {
                 <div className="grid md:grid-cols-2 gap-x-8 gap-y-3">
                   {exp.description.map((point, j) => (
                     <p key={j} className="text-black/70 text-sm leading-relaxed flex gap-2.5" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <span className="font-extrabold mt-0.5" style={{ color }}>→</span>
+                      <FiArrowRight className="mt-0.5 shrink-0" style={{ color }} aria-hidden />
                       {point}
                     </p>
                   ))}

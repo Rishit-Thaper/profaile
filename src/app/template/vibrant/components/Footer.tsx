@@ -1,4 +1,5 @@
 import { PersonalInfo } from "@/app/types";
+import { FiZap } from "react-icons/fi";
 import {
   IconBehance,
   IconDribbble,
@@ -56,8 +57,8 @@ export default function Footer({ data }: { data: PersonalInfo }) {
           })}
         </div>
 
-        <span className="text-white/50 text-xs font-bold uppercase tracking-widest" style={{ fontFamily: "'Inter', sans-serif" }}>
-          ⚡ Built with Profaile
+        <span className="inline-flex items-center gap-1 text-white/50 text-xs font-bold uppercase tracking-widest" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <FiZap aria-hidden /> Built with Profaile
         </span>
       </div>
     </footer>

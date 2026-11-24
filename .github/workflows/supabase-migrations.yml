@@ -1,0 +1,63 @@
+name: Apply Supabase migrations
+
+on:
+  repository_dispatch:
+    types:
+      - vercel.deployment.success
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-production-migrations
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    # Only the live production deployment of this app may change its database.
+    if: >-
+      github.event.client_payload.environment == 'production' &&
+      github.event.client_payload.git.ref == 'main' &&
+      contains(github.event.client_payload.alias, 'profaile.app')
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+    steps:
+      - name: Check out the deployed commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.git.sha }}
+
+      - name: Verify Supabase credentials are configured
+        run: |
+          test -n "$SUPABASE_ACCESS_TOKEN" || { echo 'Missing SUPABASE_ACCESS_TOKEN'; exit 1; }
+          test -n "$SUPABASE_DB_PASSWORD" || { echo 'Missing SUPABASE_DB_PASSWORD'; exit 1; }
+          test -n "$SUPABASE_PROJECT_ID" || { echo 'Missing SUPABASE_PROJECT_ID'; exit 1; }
+
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link production database
+        run: supabase link "$SUPABASE_PROJECT_ID"
+
+      - name: Preview pending migrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          pending=$(supabase db push --remote --dry-run --yes 2>&1) || {
+            printf '%s\n' "$pending"
+            exit 1
+          }
+          printf '%s\n' "$pending"
+          if printf '%s\n' "$pending" | grep -Eq '2026112400010[1-5]'; then
+            echo 'Historical SQL Editor migrations are missing from Supabase migration history. Reconcile versions 20261124000101–20261124000105 before allowing CI to apply new migrations.' >&2
+            exit 1
+          fi
+
+      - name: Apply pending migrations
+        run: supabase db push --remote --yes

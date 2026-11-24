@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { PortfolioData } from "@/app/types";
-import { useUpdateProfileMutation } from "@/features/profile/hooks/useUpdateProfileMutation";
+import { saveResumeVersion } from "@/features/portfolio/api/portfolio-client";
 import { useParseResumeMutation } from "@/features/resume/hooks/useParseResumeMutation";
 import styles from "./ResumeUploader.module.css";
 
@@ -11,15 +11,17 @@ type UploadState = "idle" | "dragging" | "uploading" | "success" | "error";
 export default function ResumeUploader({
   onComplete,
 }: {
-  onComplete: (data: PortfolioData) => void;
+  onComplete: (data: PortfolioData, savedResumeId?: string) => void | Promise<void>;
 }) {
   const [state, setState] = useState<UploadState>("idle");
   const [progress, setProgress] = useState(0);
   const [fileName, setFileName] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [parsedData, setParsedData] = useState<PortfolioData | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [savingResume, setSavingResume] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const parseResumeMutation = useParseResumeMutation();
-  const updateProfileMutation = useUpdateProfileMutation();
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -59,14 +61,10 @@ export default function ResumeUploader({
 
         clearInterval(progressInterval);
 
-        await updateProfileMutation.mutateAsync({ portfolio_data: parsedData });
-
         setProgress(100);
         setState("success");
-
-        setTimeout(() => {
-          onComplete(parsedData as PortfolioData);
-        }, 800);
+        setParsedData(parsedData as PortfolioData);
+        setUploadedFile(file);
       } catch (err) {
         clearInterval(progressInterval);
         setState("error");
@@ -75,8 +73,22 @@ export default function ResumeUploader({
         );
       }
     },
-    [onComplete, parseResumeMutation, updateProfileMutation],
+    [parseResumeMutation],
   );
+
+  const commitParsedResume = async (saveToLibrary: boolean) => {
+    if (!parsedData) return;
+    setSavingResume(true);
+    try {
+      const saved = saveToLibrary && uploadedFile ? await saveResumeVersion(uploadedFile, parsedData) : null;
+      await onComplete(parsedData, saved?.id);
+    } catch (err) {
+      setState("error");
+      setErrorMsg(err instanceof Error ? err.message : "Unable to use this resume");
+    } finally {
+      setSavingResume(false);
+    }
+  };
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -111,6 +123,8 @@ export default function ResumeUploader({
     setErrorMsg("");
     setProgress(0);
     setFileName("");
+    setParsedData(null);
+    setUploadedFile(null);
   };
 
   return (
@@ -168,6 +182,15 @@ export default function ResumeUploader({
             </svg>
           </div>
           <p className={styles.successLabel}>Resume parsed successfully!</p>
+          <p className={styles.successSubtext}>Save it to your private resume library, or use it only for this portfolio.</p>
+          <div className={styles.successActions}>
+            <button className={styles.useOnceButton} onClick={() => commitParsedResume(false)} disabled={savingResume}>
+              Use without saving
+            </button>
+            <button className={styles.saveResumeButton} onClick={() => commitParsedResume(true)} disabled={savingResume}>
+              {savingResume ? "Saving..." : "Save resume version"}
+            </button>
+          </div>
         </div>
       ) : state === "error" ? (
         <div className={`${styles.uploadZone} ${styles.error}`}>

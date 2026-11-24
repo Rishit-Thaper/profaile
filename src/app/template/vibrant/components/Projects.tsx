@@ -2,6 +2,7 @@
 
 import { useInView } from "@/features/portfolio/hooks/useInView";
 import { Projects as ProjectType } from "@/app/types";
+import { FiExternalLink } from "react-icons/fi";
 
 const PALETTE = [
   { color: "#FF4D6D", bg: "#FFE3E9" },
@@ -79,7 +80,7 @@ export default function Projects({ data }: { data: ProjectType[] }) {
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black text-white text-xs font-bold border-2 border-black hover:bg-white hover:text-black transition-colors duration-200"
                       style={{ fontFamily: "'Inter', sans-serif" }}
                     >
-                      Live demo ↗
+                      Live demo <FiExternalLink aria-hidden />
                     </a>
                   )}
                   {p.github && (
