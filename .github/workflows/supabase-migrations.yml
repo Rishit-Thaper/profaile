@@ -51,6 +51,9 @@ jobs:
           set -euo pipefail
           pending=$(supabase db push --remote --dry-run --yes 2>&1) || {
             printf '%s\n' "$pending"
+            if printf '%s\n' "$pending" | grep -q 'IPv6 is not supported on your current network'; then
+              echo '::error::Supabase could not obtain an IPv4 pooler connection. Add Connection Pooling: Read to the project-scoped access token, replace the production SUPABASE_ACCESS_TOKEN secret, and rerun this job.'
+            fi
             exit 1
           }
           printf '%s\n' "$pending"
