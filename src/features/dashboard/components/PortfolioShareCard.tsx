@@ -41,6 +41,7 @@ export function PortfolioShareCard({
   publicUrl,
   draftUrl,
   shareReady,
+  themeSaveMessage,
   onThemeChange,
   onAppearanceChange,
   onHeadlineSave,
@@ -53,7 +54,8 @@ export function PortfolioShareCard({
   publicUrl: string;
   draftUrl: string | null;
   shareReady: boolean;
-  onThemeChange: (theme: string) => Promise<void>;
+  themeSaveMessage?: string;
+  onThemeChange: (theme: string) => void;
   onAppearanceChange: (appearance: Appearance) => Promise<void>;
   onHeadlineSave: (headline: string) => Promise<void>;
   onGenerateHeadline: () => Promise<void>;
@@ -201,11 +203,16 @@ export function PortfolioShareCard({
     }
   };
 
+  const chooseTheme = (nextTheme: string) => {
+    setMessage("");
+    onThemeChange(nextTheme);
+  };
+
   const switchThemeByIndex = (delta: number) => {
     const currentIndex = THEME_KEYS.indexOf(theme as CardThemeId);
     const nextIndex = (currentIndex + delta + THEME_KEYS.length) % THEME_KEYS.length;
     const nextTheme = THEME_KEYS[nextIndex];
-    void run(() => onThemeChange(nextTheme));
+    chooseTheme(nextTheme);
   };
 
   const shareText = `${SHARE_MESSAGE}\n${publicUrl}`;
@@ -853,7 +860,7 @@ export function PortfolioShareCard({
                     key={key}
                     type="button"
                     className={`${styles.themePill} ${active ? styles.themePillActive : ""}`}
-                    onClick={() => void run(() => onThemeChange(key))}
+                    onClick={() => chooseTheme(key)}
                     disabled={busy || !data}
                   >
                     <span
@@ -896,7 +903,7 @@ export function PortfolioShareCard({
       {data && (
         <div className={styles.cardActions}>
           <span>
-            {message ||
+            {themeSaveMessage || message ||
               (shareReady
                 ? "Your card is live and ready to share."
                 : "Preview your changes, then go live to update the card and QR.")}
@@ -1002,7 +1009,7 @@ export function PortfolioShareCard({
               Portfolio theme
               <select
                 value={theme}
-                onChange={(event) => void run(() => onThemeChange(event.target.value))}
+                onChange={(event) => chooseTheme(event.target.value)}
                 disabled={busy || !data}
               >
                 {THEME_KEYS.map((id) => (

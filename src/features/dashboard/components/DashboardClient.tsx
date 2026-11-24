@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FiArrowRight } from "react-icons/fi";
 import "@/app/dashboard-theme.css";
 import ResumeUploader from "./ResumeUploader";
@@ -16,7 +17,7 @@ import { PortfolioDetailsEditor } from "./PortfolioDetailsEditor";
 import { WelcomeTour } from "./WelcomeTour";
 import styles from "@/app/dashboard.module.css";
 import { dashboardStepHeadings, dashboardSteps, DashboardStep } from "../constants/onboarding";
-import { PortfolioData, PortfolioVersion } from "@/app/types";
+import { CareerPortfolio, PortfolioData, PortfolioVersion } from "@/app/types";
 import { useProfileQuery } from "@/features/profile/hooks/useProfileQuery";
 import { useUpdateProfileMutation } from "@/features/profile/hooks/useUpdateProfileMutation";
 import { usePortfolioMutations, usePortfoliosQuery, usePortfolioVersionsQuery, useResumeVersionsQuery } from "@/features/portfolio/hooks/usePortfolioQueries";
@@ -24,13 +25,24 @@ import { routes } from "@/config/routes";
 import type { Appearance } from "../card/card-themes";
 import { updatePortfolio } from "@/features/portfolio/api/portfolio-client";
 
+type ThemeSave = {
+  desired: string;
+  persisted: string;
+  timer: ReturnType<typeof setTimeout> | null;
+  inFlight: Promise<void> | null;
+};
+
 export default function DashboardClient({ userEmail }: { userEmail: string }) {
   const { data: account, isLoading: accountLoading } = useProfileQuery();
   const { data: portfolios = [], isLoading: portfoliosLoading, refetch: refetchPortfolios } = usePortfoliosQuery();
   const { data: resumes = [] } = useResumeVersionsQuery();
   const profileMutation = useUpdateProfileMutation();
   const portfolioMutations = usePortfolioMutations();
+  const queryClient = useQueryClient();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [previewThemes, setPreviewThemes] = useState<Record<string, string>>({});
+  const [themeMessages, setThemeMessages] = useState<Record<string, string>>({});
+  const themeSaves = useRef(new Map<string, ThemeSave>());
   const [currentStep, setCurrentStep] = useState<DashboardStep>("upload");
   const [tourRestart, setTourRestart] = useState(0);
   const [manageOpen, setManageOpen] = useState(false);
@@ -55,6 +67,15 @@ export default function DashboardClient({ userEmail }: { userEmail: string }) {
 
   const currentPortfolio = portfolios.find((portfolio) => portfolio.id === selectedId) ?? portfolios[0] ?? null;
   const currentPortfolioId = currentPortfolio?.id;
+  const selectedTheme = (currentPortfolioId && previewThemes[currentPortfolioId]) || currentPortfolio?.draft_theme || "minimal";
+  useEffect(() => {
+    if (!currentPortfolioId || !previewThemes[currentPortfolioId] || previewThemes[currentPortfolioId] !== currentPortfolio?.draft_theme || themeSaves.current.has(currentPortfolioId)) return;
+    setPreviewThemes((previous) => {
+      const next = { ...previous };
+      delete next[currentPortfolioId];
+      return next;
+    });
+  }, [currentPortfolioId, currentPortfolio?.draft_theme, previewThemes]);
   const hasDraftData = Boolean(currentPortfolio?.draft_data && Object.keys(currentPortfolio.draft_data).length);
   const { data: versions = [], refetch: refetchVersions } = usePortfolioVersionsQuery(currentPortfolio?.id ?? null);
   const currentData = currentPortfolio?.draft_data ?? null;
@@ -97,7 +118,7 @@ export default function DashboardClient({ userEmail }: { userEmail: string }) {
   }, [currentPortfolioId, currentData?.personal_info?.name, currentData?.personal_info?.headline, needsSharedPhoto]);
 
   const publishedVersion = versions.find((version) => version.id === currentPortfolio?.published_version_id);
-  const shareReady = Boolean(currentPortfolio?.published_version_id && publishedVersion && currentData && publishedVersion.theme === currentPortfolio?.draft_theme && JSON.stringify(publishedVersion.data) === JSON.stringify(currentData));
+  const shareReady = Boolean(currentPortfolio?.published_version_id && publishedVersion && currentData && publishedVersion.theme === selectedTheme && JSON.stringify(publishedVersion.data) === JSON.stringify(currentData));
   const publicUrl = currentPortfolio && account?.username && origin
     ? `${origin}${routes.portfolioBySlug(account.username, currentPortfolio.slug)}`
     : "";
@@ -106,10 +127,66 @@ export default function DashboardClient({ userEmail }: { userEmail: string }) {
     sharedPhoto && data.personal_info && !data.personal_info.photo && data.personal_info.photo_visible !== false
       ? { ...data, personal_info: { ...data.personal_info, photo: sharedPhoto, photo_visible: true } }
       : data;
-  const persistDraft = async (data: PortfolioData, theme = currentPortfolio?.draft_theme) => {
+  const persistDraft = async (data: PortfolioData, theme?: string) => {
     if (!currentPortfolio) return;
     await portfolioMutations.saveDraft.mutateAsync({ id: currentPortfolio.id, data: withSharedPhoto(data), theme });
     await refetchPortfolios();
+  };
+  const clearThemePreview = (id: string) => setPreviewThemes((previous) => {
+    const next = { ...previous };
+    delete next[id];
+    return next;
+  });
+  const flushTheme = async (id: string): Promise<void> => {
+    const state = themeSaves.current.get(id);
+    if (!state) return;
+    if (state.timer) { clearTimeout(state.timer); state.timer = null; }
+    if (state.inFlight) {
+      await state.inFlight;
+      if (state.desired !== state.persisted) await flushTheme(id);
+      return;
+    }
+    if (state.desired === state.persisted) {
+      clearThemePreview(id);
+      setThemeMessages((previous) => ({ ...previous, [id]: "" }));
+      themeSaves.current.delete(id);
+      return;
+    }
+    const requested = state.desired;
+    state.inFlight = updatePortfolio(id, { draft_theme: requested })
+      .then(async () => {
+        await queryClient.cancelQueries({ queryKey: ["portfolios"] }).catch(() => {});
+        state.persisted = requested;
+        queryClient.setQueryData<CareerPortfolio[]>(["portfolios"], (previous) =>
+          previous?.map((portfolio) => portfolio.id === id ? { ...portfolio, draft_theme: requested } : portfolio));
+        if (state.desired === requested) {
+          setThemeMessages((previous) => ({ ...previous, [id]: "" }));
+          themeSaves.current.delete(id);
+        }
+      })
+      .catch((error: unknown) => {
+        if (state.desired === requested) {
+          state.desired = state.persisted;
+          clearThemePreview(id);
+          setThemeMessages((previous) => ({ ...previous, [id]: error instanceof Error ? `Theme not saved: ${error.message}` : "Theme not saved. Please try again." }));
+          themeSaves.current.delete(id);
+          throw error;
+        }
+      })
+      .finally(() => { state.inFlight = null; });
+    await state.inFlight;
+    if (state.desired !== state.persisted) await flushTheme(id);
+  };
+  const selectTheme = (theme: string) => {
+    if (!currentPortfolio || theme === selectedTheme) return;
+    const id = currentPortfolio.id;
+    const state = themeSaves.current.get(id) ?? { desired: currentPortfolio.draft_theme, persisted: currentPortfolio.draft_theme, timer: null, inFlight: null };
+    themeSaves.current.set(id, state);
+    state.desired = theme;
+    setPreviewThemes((previous) => ({ ...previous, [id]: theme }));
+    setThemeMessages((previous) => ({ ...previous, [id]: "Saving theme..." }));
+    if (state.timer) clearTimeout(state.timer);
+    state.timer = setTimeout(() => { state.timer = null; void flushTheme(id).catch(() => {}); }, 300);
   };
   const updatePersonal = async (change: Partial<PortfolioData["personal_info"]>) => {
     if (!currentData) return;
@@ -129,9 +206,11 @@ export default function DashboardClient({ userEmail }: { userEmail: string }) {
   };
   const createVersion = async (label?: string, publish = false) => {
     if (!currentPortfolio || !currentData) return;
+    const versionTheme = selectedTheme;
+    await flushTheme(currentPortfolio.id);
     const versionData = withSharedPhoto(currentData);
     if (versionData !== currentData) await persistDraft(versionData);
-    const version = await portfolioMutations.snapshot.mutateAsync({ id: currentPortfolio.id, label, data: versionData, theme: currentPortfolio.draft_theme });
+    const version = await portfolioMutations.snapshot.mutateAsync({ id: currentPortfolio.id, label, data: versionData, theme: versionTheme });
     if (publish) await portfolioMutations.publish.mutateAsync({ id: currentPortfolio.id, versionId: version.id });
     await Promise.all([refetchPortfolios(), refetchVersions()]);
     if (publish) { setEditing(false); setManageOpen(false); }
@@ -155,11 +234,12 @@ export default function DashboardClient({ userEmail }: { userEmail: string }) {
         <PortfolioShareCard
           portfolioName={currentPortfolio?.name ?? "Your portfolio"}
           data={currentData}
-          theme={currentPortfolio?.draft_theme ?? "minimal"}
+          theme={selectedTheme}
           publicUrl={publicUrl}
           draftUrl={currentPortfolio && hasDraftData ? routes.portfolioDraft(currentPortfolio.id) : null}
           shareReady={shareReady && Boolean(publicUrl)}
-          onThemeChange={async (theme) => { if (currentData) await persistDraft(currentData, theme); }}
+          themeSaveMessage={currentPortfolioId ? themeMessages[currentPortfolioId] : undefined}
+          onThemeChange={selectTheme}
           onAppearanceChange={async (appearance: Appearance) => updatePersonal({ appearance })}
           onHeadlineSave={async (headline) => updatePersonal({ headline })}
           onGenerateHeadline={async () => { if (currentPortfolioId) await generateHeadline(currentPortfolioId, true); }}
